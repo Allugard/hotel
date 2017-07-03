@@ -1,5 +1,7 @@
 package ua.allugard.hotel.model.entity;
 
+import static ua.allugard.hotel.model.entity.Apartment.ApartmentsType.SUITE;
+
 /**
  * Created by allugard on 29.06.17.
  */
@@ -8,11 +10,16 @@ public class Apartment {
     private int capacity;
     private int price;
     private String number;
-    private AppartmentsType appartmentsType;
+    private ApartmentsType apartmentsType;
 
-    public enum AppartmentsType {
+    public enum ApartmentsType {
         SUITE,
-        STANDART
+        STANDART;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 
     public static class Builder {
@@ -20,7 +27,7 @@ public class Apartment {
         private int capacity;
         private int price;
         private String number;
-        private AppartmentsType appartmentsType;
+        private ApartmentsType apartmentsType;
 
         public Builder setId(int id) {
             this.id = id;
@@ -37,12 +44,13 @@ public class Apartment {
             return this;
         }
 
-        public void setNumber(String number) {
+        public Builder setNumber(String number) {
             this.number = number;
+            return this;
         }
 
-        public Builder setAppartmentsType(AppartmentsType appartmentsType) {
-            this.appartmentsType = appartmentsType;
+        public Builder setApartmentsType(ApartmentsType apartmentsType) {
+            this.apartmentsType = apartmentsType;
             return this;
         }
 
@@ -52,7 +60,7 @@ public class Apartment {
             apartment.setCapacity(capacity);
             apartment.setPrice(price);
             apartment.setNumber(number);
-            apartment.setAppartmentsType(appartmentsType);
+            apartment.setApartmentsType(apartmentsType);
             return apartment;
         }
     }
@@ -89,12 +97,12 @@ public class Apartment {
         this.number = number;
     }
 
-    public AppartmentsType getAppartmentsType() {
-        return appartmentsType;
+    public ApartmentsType getApartmentsType() {
+        return apartmentsType;
     }
 
-    public void setAppartmentsType(AppartmentsType appartmentsType) {
-        this.appartmentsType = appartmentsType;
+    public void setApartmentsType(ApartmentsType apartmentsType) {
+        this.apartmentsType = apartmentsType;
     }
 
     @Override
@@ -108,7 +116,7 @@ public class Apartment {
         if (capacity != that.capacity) return false;
         if (price != that.price) return false;
         if (number != null ? !number.equals(that.number) : that.number != null) return false;
-        return appartmentsType == that.appartmentsType;
+        return apartmentsType == that.apartmentsType;
     }
 
     @Override
@@ -117,7 +125,7 @@ public class Apartment {
         result = 31 * result + capacity;
         result = 31 * result + price;
         result = 31 * result + (number != null ? number.hashCode() : 0);
-        result = 31 * result + (appartmentsType != null ? appartmentsType.hashCode() : 0);
+        result = 31 * result + (apartmentsType != null ? apartmentsType.hashCode() : 0);
         return result;
     }
 }

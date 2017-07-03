@@ -4,6 +4,7 @@ package ua.allugard.hotel.model.entity;
  * Created by allugard on 30.06.17.
  */
 public class UserAuthentication {
+
     private int id;
     private String login;
     private String password;
@@ -11,7 +12,12 @@ public class UserAuthentication {
 
     public enum Role {
         ADMIN,
-        CLIENT
+        CLIENT;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase() ;
+        }
     }
 
     public static class Builder {

@@ -7,6 +7,7 @@ import java.time.LocalDate;
  * Created by allugard on 29.06.17.
  */
 public class Booking {
+
     private int id;
     private User user;
     private Apartment apartment;
@@ -18,7 +19,12 @@ public class Booking {
     public enum Status {
         PROCESSED,
         CONFIRMED,
-        REJECTED
+        REJECTED;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase() ;
+        }
     }
 
     public static class Builder {

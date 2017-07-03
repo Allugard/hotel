@@ -4,6 +4,7 @@ package ua.allugard.hotel.model.entity;
  * Created by allugard on 29.06.17.
  */
 public class Bill {
+
     private int id;
     private int price;
 
