@@ -1,5 +1,6 @@
 package ua.allugard.hotel.model.dao.util;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -11,5 +12,6 @@ public interface DatabaseConnection extends AutoCloseable {
         void commit();
         void rollback();
         void close();
+        Connection getConnection();
 
 }

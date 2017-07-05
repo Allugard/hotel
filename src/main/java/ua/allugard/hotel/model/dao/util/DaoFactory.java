@@ -22,23 +22,23 @@ public class DaoFactory {
         return Holder.INSTANCE;
     }
 
-    public ApartmentDao createApartmentDao(Connection connection){
-        return new JdbcApartmentDao(connection);
+    public ApartmentDao createApartmentDao(DatabaseConnection connection){
+        return new JdbcApartmentDao(connection.getConnection());
     }
 
-    public BillDao createBillDao(Connection connection){
-        return new JdbcBillDao(connection);
+    public BillDao createBillDao(DatabaseConnection connection){
+        return new JdbcBillDao(connection.getConnection());
     }
 
-    public BookingDao createBookingDao(Connection connection){
-        return new JdbcBookingDao(connection);
+    public BookingDao createBookingDao(DatabaseConnection connection){
+        return new JdbcBookingDao(connection.getConnection());
     }
 
-    public UserAuthenticationDao createUserAuthenticationDao(Connection connection){
-        return new JdbcUserAuthenticationDao(connection);
+    public UserAuthenticationDao createUserAuthenticationDao(DatabaseConnection connection){
+        return new JdbcUserAuthenticationDao(connection.getConnection());
     }
 
-    public UserDao createUserDao(Connection connection){
-        return new JdbcUserDao(connection);
+    public UserDao createUserDao(DatabaseConnection connection){
+        return new JdbcUserDao(connection.getConnection());
     }
 }

@@ -57,4 +57,9 @@ public class JdbcConnection implements DatabaseConnection {
 
         }
     }
+
+    @Override
+    public Connection getConnection() {
+        return connection;
+    }
 }
