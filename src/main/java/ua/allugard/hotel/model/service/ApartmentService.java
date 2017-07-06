@@ -32,57 +32,43 @@ public class ApartmentService {
 
     Optional<Apartment> find(int id){
         Optional<Apartment> apartment;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            apartment = daoFactory.createApartmentDao(connection).find(id);
-        }
+        apartment = daoFactory.createApartmentDao().find(id);
         return apartment;
     }
 
     Optional<Apartment> findByNumber(String number){
         Optional<Apartment> apartment;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            apartment = daoFactory.createApartmentDao(connection).findByNumber(number);
-        }
+        apartment = daoFactory.createApartmentDao().findByNumber(number);
         return apartment;
     }
 
     List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType){
         List<Apartment> apartment;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            apartment = daoFactory.createApartmentDao(connection).findFreeNumbers(dateFrom, dateTo, capacity, apartmentsType);
-        }
+        apartment = daoFactory.createApartmentDao().findFreeNumbers(dateFrom, dateTo, capacity, apartmentsType);
         return apartment;
     }
     List<Apartment> findAll(){
         List<Apartment> apartment;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            apartment = daoFactory.createApartmentDao(connection).findAll();
-        }
+        apartment = daoFactory.createApartmentDao().findAll();
         return apartment;
     }
 
     boolean create(Apartment apartment){
         boolean created;
-        try(DatabaseConnection connection = connectionManager.getConnection()) {
-            created = daoFactory.createApartmentDao(connection).create(apartment);
-        }
+        created = daoFactory.createApartmentDao().create(apartment);
         return created;
     }
 
     boolean update(Apartment apartment){
         boolean updated;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            updated = daoFactory.createApartmentDao(connection).update(apartment);
-        }
+        updated = daoFactory.createApartmentDao().update(apartment);
         return updated;
     }
 
     boolean delete(Apartment apartment){
         boolean deleted;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
             //TODO add method deleteByApartmentId in BookingDao
-            deleted = daoFactory.createApartmentDao(connection).delete(apartment.getId());
-        }
+            deleted = daoFactory.createApartmentDao().delete(apartment.getId());
         return deleted;
     }
 

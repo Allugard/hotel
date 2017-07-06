@@ -1,6 +1,8 @@
 package ua.allugard.hotel.model.dao.impl;
 
 import ua.allugard.hotel.model.dao.UserDao;
+import ua.allugard.hotel.model.dao.util.ConnectionManager;
+import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.User;
 
 import java.sql.*;
@@ -13,7 +15,7 @@ import java.util.Optional;
  */
 public class JdbcUserDao implements UserDao {
 
-    private Connection connection;
+    private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 1;
     private static final int COLUMN_FIRST_NAME_INDEX = 2;
     private static final int COLUMN_LAST_NAME_INDEX = 3;
@@ -33,14 +35,23 @@ public class JdbcUserDao implements UserDao {
     private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
     private static final String FIND_BY_FULL_NAME = FIND_ALL + " WHERE last_name = ? AND first_name = ?";
 
-    public JdbcUserDao(Connection connection) {
-        this.connection = connection;
+    JdbcUserDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
+    private static class Holder {
+        static final JdbcUserDao INSTANCE = new JdbcUserDao(ConnectionManager.getInstance());
+    }
+
+    public static JdbcUserDao getInstance() {
+        return Holder.INSTANCE;
     }
 
     @Override
     public Optional<User> find(int id) {
         Optional<User> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_ID)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -54,7 +65,8 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<User> findAll() {
         List<User> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_ALL)){
             ResultSet resultSet = statement.executeQuery();
             result = getUsersFromResultSet(resultSet);
@@ -67,7 +79,8 @@ public class JdbcUserDao implements UserDao {
     @Override
     public boolean create(User user) {
         int insertedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(INSERT_USER)) {
             statement.setInt(COLUMN_ID_INDEX, user.getUserAuthentication().getId());
             statement.setString(COLUMN_FIRST_NAME_INDEX, user.getFirstName());
@@ -83,7 +96,8 @@ public class JdbcUserDao implements UserDao {
     @Override
     public boolean update(User user) {
         int updatedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(UPDATE_USER)) {
             statement.setInt(COLUMN_ID_INDEX, user.getUserAuthentication().getId());
             statement.setString(COLUMN_FIRST_NAME_INDEX, user.getFirstName());
@@ -100,7 +114,8 @@ public class JdbcUserDao implements UserDao {
     @Override
     public boolean delete(int id) {
         int deletedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(DELETE_USER)) {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
@@ -113,7 +128,8 @@ public class JdbcUserDao implements UserDao {
     @Override
     public List<User> findUserByFullName(String firstName, String lastName) {
         List<User> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_FULL_NAME)){
             statement.setString(1, lastName);
             statement.setString(2, firstName);

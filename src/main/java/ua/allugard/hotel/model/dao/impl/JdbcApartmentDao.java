@@ -1,6 +1,9 @@
 package ua.allugard.hotel.model.dao.impl;
 
 import ua.allugard.hotel.model.dao.ApartmentDao;
+import ua.allugard.hotel.model.dao.util.ConnectionManager;
+import ua.allugard.hotel.model.dao.util.DatabaseConnection;
+import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
 
 import java.sql.*;
@@ -14,7 +17,7 @@ import java.util.Optional;
  */
 public class JdbcApartmentDao implements ApartmentDao {
 
-    private Connection connection;
+    private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 5;
     private static final int COLUMN_CAPACITY_INDEX = 1;
     private static final int COLUMN_APARTMENTS_TYPE_INDEX = 2;
@@ -44,14 +47,23 @@ public class JdbcApartmentDao implements ApartmentDao {
                                                           "AND apartments.apartments_type = ? and apartments.capacity = ?";
 
 
-    public JdbcApartmentDao(Connection connection) {
-        this.connection = connection;
+    JdbcApartmentDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
+    private static class Holder {
+        static final JdbcApartmentDao INSTANCE = new JdbcApartmentDao(ConnectionManager.getInstance());
+    }
+
+    public static JdbcApartmentDao getInstance() {
+        return Holder.INSTANCE;
     }
 
     @Override
     public Optional<Apartment> find(int id) {
         Optional<Apartment> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_ID)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -65,7 +77,8 @@ public class JdbcApartmentDao implements ApartmentDao {
     @Override
     public List<Apartment> findAll() {
         List<Apartment> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_ALL)){
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentsFromResultSet(resultSet);
@@ -78,7 +91,8 @@ public class JdbcApartmentDao implements ApartmentDao {
     @Override
     public boolean create(Apartment apartment) {
         int insertedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(INSERT_APARTMENT,
                              Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(COLUMN_CAPACITY_INDEX, apartment.getCapacity());
@@ -96,7 +110,8 @@ public class JdbcApartmentDao implements ApartmentDao {
     @Override
     public boolean update(Apartment apartment) {
         int updatedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(UPDATE_APARTMENT)) {
             statement.setInt(COLUMN_CAPACITY_INDEX, apartment.getCapacity());
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, apartment.getApartmentsType().toString());
@@ -113,7 +128,8 @@ public class JdbcApartmentDao implements ApartmentDao {
     @Override
     public boolean delete(int id) {
         int deletedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(DELETE_APARTMENT)) {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
@@ -126,7 +142,8 @@ public class JdbcApartmentDao implements ApartmentDao {
     @Override
     public Optional<Apartment> findByNumber(String number) {
         Optional<Apartment> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_NUMBER)){
             statement.setString(1, number);
             ResultSet resultSet = statement.executeQuery();
@@ -140,7 +157,8 @@ public class JdbcApartmentDao implements ApartmentDao {
     @Override
     public List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType) {
         List<Apartment> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_FREE_NUMBER)){
             statement.setDate(1, Date.valueOf(dateFrom));
             statement.setDate(2, Date.valueOf(dateTo));

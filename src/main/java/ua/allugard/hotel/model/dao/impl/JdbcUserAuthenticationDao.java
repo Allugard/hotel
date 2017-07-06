@@ -1,6 +1,8 @@
 package ua.allugard.hotel.model.dao.impl;
 
 import ua.allugard.hotel.model.dao.UserAuthenticationDao;
+import ua.allugard.hotel.model.dao.util.ConnectionManager;
+import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.UserAuthentication;
 
 import java.sql.*;
@@ -13,7 +15,7 @@ import java.util.Optional;
  */
 public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
 
-    private Connection connection;
+    private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 4;
     private static final int COLUMN_LOGIN_INDEX = 1;
     private static final int COLUMN_PASSWORD_INDEX = 2;
@@ -33,14 +35,23 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
     private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
     private static final String FIND_BY_LOGIN = FIND_ALL + " WHERE login = ?";
 
-    public JdbcUserAuthenticationDao(Connection connection) {
-        this.connection = connection;
+    JdbcUserAuthenticationDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
+    private static class Holder {
+        static final JdbcUserAuthenticationDao INSTANCE = new JdbcUserAuthenticationDao(ConnectionManager.getInstance());
+    }
+
+    public static JdbcUserAuthenticationDao getInstance() {
+        return Holder.INSTANCE;
     }
 
     @Override
     public Optional<UserAuthentication> find(int id) {
         Optional<UserAuthentication> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_ID)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -54,7 +65,8 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
     @Override
     public List<UserAuthentication> findAll() {
         List<UserAuthentication> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_ALL)){
             ResultSet resultSet = statement.executeQuery();
             result = getUserAuthenticationsFromResultSet(resultSet);
@@ -67,7 +79,8 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
     @Override
     public boolean create(UserAuthentication userAuthentication) {
         int insertedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(INSERT_USER_AUTHENTICATION,
                              Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(COLUMN_LOGIN_INDEX, userAuthentication.getLogin());
@@ -84,7 +97,8 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
     @Override
     public boolean update(UserAuthentication userAuthentication) {
         int updatedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(UPDATE_USER_AUTHENTICATION)) {
             statement.setString(COLUMN_LOGIN_INDEX, userAuthentication.getLogin());
             statement.setString(COLUMN_PASSWORD_INDEX, userAuthentication.getPassword());
@@ -100,7 +114,8 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
     @Override
     public boolean delete(int id) {
         int deletedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(DELETE_USER_AUTHENTICATION)) {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
@@ -113,7 +128,8 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
     @Override
     public Optional<UserAuthentication> findUserByLogin(String login) {
         Optional<UserAuthentication> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_LOGIN)){
             statement.setString(1, login);
             ResultSet resultSet = statement.executeQuery();

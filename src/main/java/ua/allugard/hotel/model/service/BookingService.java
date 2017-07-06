@@ -32,17 +32,13 @@ public class BookingService {
 
     public boolean create(Booking booking){
         boolean created;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            created = daoFactory.createBookingDao(connection).create(booking);
-        }
+        created = daoFactory.createBookingDao().create(booking);
         return created;
     }
 
     public List<Booking> findByUser(int userId){
         List<Booking> bookings;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            bookings= daoFactory.createBookingDao(connection).findByUser(userId);
-        }
+        bookings= daoFactory.createBookingDao().findByUser(userId);
         return bookings;
     }
 

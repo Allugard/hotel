@@ -30,17 +30,13 @@ public class UserAuthenticationService {
 
     Optional<UserAuthentication> findUserByLogin(String login){
         Optional<UserAuthentication> userAuthentication;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            userAuthentication = daoFactory.createUserAuthenticationDao(connection).findUserByLogin(login);
-        }
+        userAuthentication = daoFactory.createUserAuthenticationDao().findUserByLogin(login);
         return userAuthentication;
     }
 
     boolean update(UserAuthentication userAuthentication){
         boolean updated;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            updated = daoFactory.createUserAuthenticationDao(connection).update(userAuthentication);
-        }
+        updated = daoFactory.createUserAuthenticationDao().update(userAuthentication);
         return updated;
     }
 

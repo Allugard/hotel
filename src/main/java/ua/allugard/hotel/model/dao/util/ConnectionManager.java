@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class ConnectionManager {
 
     private DataSource dataSource;
-    private static ThreadLocal<DatabaseConnection> connectionThreadLocal = new ThreadLocal<>();
+    private static ThreadLocal<JdbcConnection> connectionThreadLocal = new ThreadLocal<>();
 
     private ConnectionManager() {
         try {
@@ -30,7 +30,7 @@ public class ConnectionManager {
         return Holder.INSTANCE;
     }
 
-    public synchronized DatabaseConnection getConnection() {
+    public synchronized JdbcConnection getConnection() {
         if(connectionThreadLocal.get() == null) {
             try {
                 return new JdbcConnection(dataSource.getConnection());
@@ -43,7 +43,7 @@ public class ConnectionManager {
     }
 
     public void startTransaction(){
-        DatabaseConnection connection = getConnection();
+        JdbcConnection connection = getConnection();
         connection.startTransaction();
         connectionThreadLocal.set(connection);
     }

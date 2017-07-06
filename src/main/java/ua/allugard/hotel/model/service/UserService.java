@@ -31,12 +31,14 @@ public class UserService {
 
 
     boolean update(User user){
-        boolean updated;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            connection.startTransaction();
-            updated = daoFactory.createUserDao(connection).update(user);
-            updated = daoFactory.createUserAuthenticationDao(connection).update(user.getUserAuthentication());
-            connection.commit();
+        boolean updated = false;
+        try {
+            connectionManager.startTransaction();
+            updated = daoFactory.createUserDao().update(user);
+            updated = daoFactory.createUserAuthenticationDao().update(user.getUserAuthentication());
+            connectionManager.commit();
+        }catch (Exception e){
+            connectionManager.rollback();
         }
         return updated;
     }
@@ -44,18 +46,19 @@ public class UserService {
 
     Optional<User> find(int id){
         Optional<User> user;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            user = daoFactory.createUserDao(connection).find(id);
-        }
+        user = daoFactory.createUserDao().find(id);
         return user;
     }
 
     boolean create(User user){
-        boolean created;
-        try(DatabaseConnection connection = connectionManager.getConnection()) {
-            connection.startTransaction();
-            created = daoFactory.createUserDao(connection).create(user);
-            connection.commit();
+        boolean created = false;
+        try {
+            connectionManager.startTransaction();
+            created = daoFactory.createUserAuthenticationDao().create(user.getUserAuthentication());
+            created = daoFactory.createUserDao().create(user);
+            connectionManager.commit();
+        } catch (Exception e){
+            connectionManager.rollback();
         }
         return created;
     }
