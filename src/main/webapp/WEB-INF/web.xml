@@ -5,20 +5,22 @@
   version="3.0">
 
     <display-name>Hotel Application</display-name>
-   <!--  <description>
-        This is a simple web application with a source code organization
-        based on the recommendations of the Application Developer's Guide.
-    </description>
 
     <servlet>
-        <servlet-name>HelloServlet</servlet-name>
-        <servlet-class>examples.Hello</servlet-class>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>ua.allugard.hotel.controller.FrontController</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>HelloServlet</servlet-name>
-        <url-pattern>/hello</url-pattern>
-    </servlet-mapping> -->
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>/view/index.jsp</welcome-file>
+    </welcome-file-list>
+
+
     <resource-ref>
         <res-ref-name>jdbc/hotelDB</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
