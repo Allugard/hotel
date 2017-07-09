@@ -31,8 +31,9 @@ public class User {
             return this;
         }
 
-        public void setUserAuthentication(UserAuthentication userAuthentication) {
+        public Builder setUserAuthentication(UserAuthentication userAuthentication) {
             this.userAuthentication = userAuthentication;
+            return this;
         }
 
         public User build() {
@@ -97,5 +98,15 @@ public class User {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (userAuthentication != null ? userAuthentication.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", userAuthentication=" + userAuthentication +
+                '}';
     }
 }

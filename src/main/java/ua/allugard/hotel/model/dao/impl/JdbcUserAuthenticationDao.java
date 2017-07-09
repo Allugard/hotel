@@ -74,12 +74,16 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             statement.setString(COLUMN_PASSWORD_INDEX, userAuthentication.getPassword());
             statement.setString(COLUMN_USER_ROLE_INDEX, userAuthentication.getRole().toString());
             insertedRow = statement.executeUpdate();
-            userAuthentication.setId(statement.getGeneratedKeys().getInt(1));
+
+            userAuthentication.setId(generateId(statement));
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return insertedRow > 0;
     }
+
+
+
 
     @Override
     public boolean update(UserAuthentication userAuthentication) {
