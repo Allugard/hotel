@@ -30,25 +30,20 @@ public class BillService {
 
     Optional<Bill> find(int id){
         Optional<Bill> bill;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            bill = daoFactory.createBillDao(connection).find(id);
-        }
+        bill = daoFactory.createBillDao().find(id);
         return bill;
     }
 
     boolean create(Bill bill){
         boolean created;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            created = daoFactory.createBillDao(connection).create(bill);
-        }
+        created = daoFactory.createBillDao().create(bill);
+
         return created;
     }
 
     boolean delete(Bill bill){
         boolean deleted;
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
-            deleted = daoFactory.createBillDao(connection).delete(bill.getId());
-        }
+        deleted = daoFactory.createBillDao().delete(bill.getId());
         return deleted;
     }
 }

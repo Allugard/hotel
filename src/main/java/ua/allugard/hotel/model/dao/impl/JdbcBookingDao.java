@@ -1,6 +1,8 @@
 package ua.allugard.hotel.model.dao.impl;
 
 import ua.allugard.hotel.model.dao.BookingDao;
+import ua.allugard.hotel.model.dao.util.ConnectionManager;
+import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Booking;
 
 import java.sql.*;
@@ -13,7 +15,7 @@ import java.util.Optional;
  */
 public class JdbcBookingDao implements BookingDao {
 
-    private Connection connection;
+    private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 7;
     private static final int COLUMN_USERS_ID_INDEX = 1;
     private static final int COLUMN_APARTMENTS_ID_INDEX = 2;
@@ -37,14 +39,23 @@ public class JdbcBookingDao implements BookingDao {
     private static final String FIND_BY_APARTMENT = FIND_ALL + "INNER JOIN apartments ON bookings.apartments_id = apartments.id";
     private static final String FIND_BY_USER = FIND_ALL + "INNER JOIN users ON bookings.users_id = users.id";
 
-    public JdbcBookingDao(Connection connection) {
-        this.connection = connection;
+    JdbcBookingDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
+    private static class Holder {
+        static final JdbcBookingDao INSTANCE = new JdbcBookingDao(ConnectionManager.getInstance());
+    }
+
+    public static JdbcBookingDao getInstance() {
+        return Holder.INSTANCE;
     }
 
     @Override
     public Optional<Booking> find(int id) {
         Optional<Booking> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_ID)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -58,7 +69,8 @@ public class JdbcBookingDao implements BookingDao {
     @Override
     public List<Booking> findAll() {
         List<Booking> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_ALL)){
             ResultSet resultSet = statement.executeQuery();
             result = getBookingsFromResultSet(resultSet);
@@ -71,7 +83,8 @@ public class JdbcBookingDao implements BookingDao {
     @Override
     public boolean create(Booking booking) {
         int insertedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(INSERT_BOOKING,
                              Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(COLUMN_USERS_ID_INDEX, booking.getUser().getUserAuthentication().getId());
@@ -91,7 +104,8 @@ public class JdbcBookingDao implements BookingDao {
     @Override
     public boolean update(Booking booking) {
         int updatedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(UPDATE_BOOKING)) {
             statement.setInt(COLUMN_USERS_ID_INDEX, booking.getUser().getUserAuthentication().getId());
             statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
@@ -113,7 +127,8 @@ public class JdbcBookingDao implements BookingDao {
     @Override
     public boolean delete(int id) {
         int deletedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(DELETE_BOOKING)) {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
@@ -126,7 +141,8 @@ public class JdbcBookingDao implements BookingDao {
     @Override
     public List<Booking> findByUser(int userId) {
         List<Booking> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_USER)){
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
@@ -141,7 +157,8 @@ public class JdbcBookingDao implements BookingDao {
     @Override
     public List<Booking> findByApartment(int apartmentId) {
         List<Booking> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_APARTMENT)){
             statement.setInt(1, apartmentId);
             ResultSet resultSet = statement.executeQuery();

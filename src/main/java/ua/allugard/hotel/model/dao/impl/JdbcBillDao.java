@@ -1,6 +1,8 @@
 package ua.allugard.hotel.model.dao.impl;
 
 import ua.allugard.hotel.model.dao.BillDao;
+import ua.allugard.hotel.model.dao.util.ConnectionManager;
+import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Bill;
 
 import java.sql.*;
@@ -13,7 +15,7 @@ import java.util.Optional;
  */
 public class JdbcBillDao implements BillDao {
 
-    private Connection connection;
+    private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 2;
     private static final int COLUMN_PRICE_INDEX = 1;
 
@@ -28,14 +30,24 @@ public class JdbcBillDao implements BillDao {
     private static final String FIND_ALL = "SELECT * FROM bills";
     private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
 
-    public JdbcBillDao(Connection connection) {
-        this.connection = connection;
+    JdbcBillDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
+
+    private static class Holder {
+        static final JdbcBillDao INSTANCE = new JdbcBillDao(ConnectionManager.getInstance());
+    }
+
+    public static JdbcBillDao getInstance() {
+        return Holder.INSTANCE;
+    }
+
 
     @Override
     public Optional<Bill> find(int id) {
         Optional<Bill> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+        PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_ID)){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -49,7 +61,8 @@ public class JdbcBillDao implements BillDao {
     @Override
     public List<Bill> findAll() {
         List<Bill> result = null;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(FIND_ALL)){
             ResultSet resultSet = statement.executeQuery();
             result = getBillsFromResultSet(resultSet);
@@ -62,7 +75,8 @@ public class JdbcBillDao implements BillDao {
     @Override
     public boolean create(Bill bill) {
         int insertedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(INSERT_BILL,
                              Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(COLUMN_PRICE_INDEX, bill.getPrice());
@@ -77,7 +91,8 @@ public class JdbcBillDao implements BillDao {
     @Override
     public boolean update(Bill bill) {
         int updatedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(UPDATE_BILL)) {
             statement.setInt(COLUMN_PRICE_INDEX, bill.getPrice());
             statement.setInt(COLUMN_ID_INDEX, bill.getId());
@@ -91,7 +106,8 @@ public class JdbcBillDao implements BillDao {
     @Override
     public boolean delete(int id) {
         int deletedRow = 0;
-        try (PreparedStatement statement =
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
                      connection.prepareStatement(DELETE_BILL)) {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
