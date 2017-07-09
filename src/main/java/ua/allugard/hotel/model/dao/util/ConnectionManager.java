@@ -48,18 +48,18 @@ public class ConnectionManager {
         connectionThreadLocal.set(connection);
     }
     public void commit(){
-        DatabaseConnection connection = connectionThreadLocal.get();
+        JdbcConnection connection = connectionThreadLocal.get();
         connection.commit();
         close(connection);
     }
 
     public void rollback(){
-        DatabaseConnection connection = connectionThreadLocal.get();
+        JdbcConnection connection = connectionThreadLocal.get();
         connection.rollback();
         close(connection);
     }
 
-    private void close(DatabaseConnection connection){
+    private void close(JdbcConnection connection){
         connectionThreadLocal.remove();
         connection.close();
     }

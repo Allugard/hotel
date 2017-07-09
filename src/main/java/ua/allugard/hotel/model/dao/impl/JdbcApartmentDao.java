@@ -2,7 +2,6 @@ package ua.allugard.hotel.model.dao.impl;
 
 import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
-import ua.allugard.hotel.model.dao.util.DatabaseConnection;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
 

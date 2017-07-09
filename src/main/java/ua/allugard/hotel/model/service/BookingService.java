@@ -2,12 +2,10 @@ package ua.allugard.hotel.model.service;
 
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
-import ua.allugard.hotel.model.dao.util.DatabaseConnection;
 import ua.allugard.hotel.model.entity.Booking;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by allugard on 05.07.17.
@@ -44,9 +42,8 @@ public class BookingService {
 
     public List<Booking> findProcessedBookings(){
         List<Booking> bookings = new ArrayList<>();
-        try (DatabaseConnection connection = connectionManager.getConnection()) {
             //TODO: add method
-        }
+
         return bookings;
     }
 

@@ -2,7 +2,6 @@ package ua.allugard.hotel.model.service;
 
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
-import ua.allugard.hotel.model.dao.util.DatabaseConnection;
 import ua.allugard.hotel.model.entity.Apartment;
 
 import java.time.LocalDate;

@@ -2,10 +2,8 @@ package ua.allugard.hotel.model.service;
 
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
-import ua.allugard.hotel.model.dao.util.DatabaseConnection;
 import ua.allugard.hotel.model.entity.Bill;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,7 +35,6 @@ public class BillService {
     boolean create(Bill bill){
         boolean created;
         created = daoFactory.createBillDao().create(bill);
-
         return created;
     }
 

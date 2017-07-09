@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 /**
  * Created by allugard on 01.07.17.
  */
-public class JdbcConnection implements DatabaseConnection {
+public class JdbcConnection implements AutoCloseable {
     private Connection connection;
     private boolean inTransaction;
 
@@ -17,7 +17,6 @@ public class JdbcConnection implements DatabaseConnection {
         inTransaction = false;
     }
 
-    @Override
     public void startTransaction() {
         try {
             connection.setAutoCommit(false);
@@ -27,7 +26,6 @@ public class JdbcConnection implements DatabaseConnection {
         }
     }
 
-    @Override
     public void commit() {
         try {
             connection.commit();
@@ -37,7 +35,6 @@ public class JdbcConnection implements DatabaseConnection {
         }
     }
 
-    @Override
     public void rollback() {
         try {
             connection.rollback();
@@ -49,20 +46,14 @@ public class JdbcConnection implements DatabaseConnection {
 
     @Override
     public void close() {
-        if (inTransaction) {
-            rollback();
-        }
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (!inTransaction) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
 
+            }
         }
-    }
-
-    @Override
-    public Connection getConnection() {
-        return connection;
     }
 
     public Statement createStatement() throws SQLException {
