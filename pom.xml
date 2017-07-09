@@ -61,7 +61,7 @@
 					<url>http://localhost:8080/manager/text</url>
 					<server>TomcatServer</server>
 					<update>true</update>
-					<path>/hotel</path>
+					<path>/</path>
 					<username>admin</username>
 					<password>admin</password>
 				</configuration>
