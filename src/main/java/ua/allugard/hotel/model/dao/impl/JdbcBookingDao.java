@@ -42,7 +42,7 @@ public class JdbcBookingDao implements BookingDao {
     private static final String FIND_ALL = "SELECT bookings.* FROM bookings ";
     private static final String FIND_BY_ID = FIND_ALL + "WHERE id = ?";
     private static final String FIND_BY_USER = FIND_ALL + "INNER JOIN users ON bookings.users_id = users.id";
-    private static final String FIND_PROCESSED = FIND_ALL + "WHERE status = processed";
+    private static final String FIND_PROCESSED = FIND_ALL + "WHERE status = \"processed\"";
 
     JdbcBookingDao(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -120,10 +120,15 @@ public class JdbcBookingDao implements BookingDao {
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, booking.getApartmentsType().toString());
             if(booking.getUser() != null) {
                 statement.setInt(COLUMN_USERS_ID_INDEX, booking.getUser().getUserAuthentication().getId());
+            } else {
+                statement.setNull(COLUMN_USERS_ID_INDEX, Types.INTEGER);
             }
             if (booking.getBill() != null || booking.getApartment() != null) {
                 statement.setInt(COLUMN_BILL_ID_INDEX, booking.getBill().getId());
                 statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
+            } else {
+                statement.setNull(COLUMN_BILL_ID_INDEX, Types.INTEGER);
+                statement.setNull(COLUMN_APARTMENTS_ID_INDEX, Types.INTEGER);
             }
             statement.setInt(COLUMN_ID_INDEX, booking.getId());
             updatedRow = statement.executeUpdate();

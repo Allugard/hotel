@@ -16,10 +16,8 @@
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form name="addBookingForm" method="POST" action="addBooking/add" autocomplete="on">
-<%--
+<form name="addBookingForm" method="POST" action="addBooking" autocomplete="on">
     <input type="hidden" name="command" value="addBooking"/>
---%>
     <div>
         <span>
             <fmt:message key="bookings.dateFrom"/><label>*</label>

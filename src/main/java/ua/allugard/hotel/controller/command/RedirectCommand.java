@@ -9,7 +9,12 @@ import javax.servlet.http.HttpServletResponse;
  * Created by allugard on 10.07.17.
  */
 public class RedirectCommand implements Command {
-    @Override
+
+    public static RedirectCommand getInstance() {
+        return new RedirectCommand();
+    }
+
+        @Override
         public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page = request.getParameter("page");
         System.out.println(page);

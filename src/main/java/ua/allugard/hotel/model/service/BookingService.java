@@ -6,6 +6,7 @@ import ua.allugard.hotel.model.entity.Booking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by allugard on 05.07.17.
@@ -18,6 +19,14 @@ public class BookingService {
     BookingService(ConnectionManager connectionManager, DaoFactory daoFactory) {
         this.connectionManager = connectionManager;
         this.daoFactory = daoFactory;
+    }
+
+    public Optional<Booking> find(int id) {
+        return daoFactory.createBookingDao().find(id);
+    }
+
+    public boolean update(Booking booking) {
+        return daoFactory.createBookingDao().update(booking);
     }
 
     private static class Holder {

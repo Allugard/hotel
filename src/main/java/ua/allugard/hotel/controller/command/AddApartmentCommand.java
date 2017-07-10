@@ -31,7 +31,7 @@ public class AddApartmentCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         Apartment apartment = createApartmentFromRequest(request);
         apartmentService.create(apartment);
-        return Page.PROFILE;
+        return Page.ADD_APARTMENT;
     }
 
     private Apartment createApartmentFromRequest(HttpServletRequest request) {

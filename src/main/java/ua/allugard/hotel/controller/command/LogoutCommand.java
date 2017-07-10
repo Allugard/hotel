@@ -9,6 +9,11 @@ import javax.servlet.http.HttpServletResponse;
  * Created by allugard on 10.07.17.
  */
 public class LogoutCommand implements Command {
+
+    public static LogoutCommand getInstance() {
+        return new LogoutCommand();
+    }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();

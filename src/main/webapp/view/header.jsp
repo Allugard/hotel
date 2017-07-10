@@ -3,7 +3,14 @@
     <ul>
 
 
-        <li><a href="/" class="lnk"><fmt:message key="main.page"/></a></li>
+        <%--<li><a href="/" class="lnk"><fmt:message key="main.page"/></a></li>--%>
+        <form action="/" method="post">
+            <input type="hidden" name="command" value="redirect"/>
+            <input type="hidden" name="page" value="index"/>
+            <button type="submit"><fmt:message key="main.page"/></button>
+
+        </form>
+
         <c:choose>
             <c:when test="${user == null}">
                 <%--<li>
@@ -13,28 +20,49 @@
                 <form action="/login" method="post">
                     <input type="hidden" name="command" value="redirect"/>
                     <input type="hidden" name="page" value="login"/>
-                    <input type="submit" value=<fmt:message key="login.page"/>/>
+                    <button type="submit"><fmt:message key="login.page"/></button>
                 </form>
 
 
 
-                <li>
+                <%--<li>
                     <a href="/registration"><fmt:message key="registration.page"/></a>
-                </li>
+                </li>--%>
+
+                <form action="/registration" method="post">
+                    <input type="hidden" name="command" value="redirect"/>
+                    <input type="hidden" name="page" value="registration"/>
+                    <button type="submit"><fmt:message key="registration.page"/></button>
+                </form>
             </c:when>
 
+
+
             <c:when test="${user != null}">
-                <li>
+                <%--<li>
                     <a href="/profile"><fmt:message key="profile.page"/></a>
-                </li>
+                </li>--%>
+
+                <form action="/profile" method="post">
+                    <input type="hidden" name="command" value="redirect"/>
+                    <input type="hidden" name="page" value="profile"/>
+                    <button type="submit"><fmt:message key="profile.page"/></button>
+                </form>
+
                 <li>
                     <fmt:message key="header.logged"/>
                     <c:out value="${user.userAuthentication.login}"/>
                 </li>
 
-                <li>
+
+                <form action="/logout" method="post">
+                    <input type="hidden" name="command" value="logout"/>
+                    <button type="submit"><fmt:message key="logout"/></button>
+                </form>
+
+                <%--<li>
                     <a href="/logout"><fmt:message key="logout"/></a>
-                </li>
+                </li>--%>
                     <%--POST INSTEAD GET--%>
                <%-- <form action="your_url" method="post">
                         <button type="submit" name="your_name" value="your_value" class="btn-link">Go</button>

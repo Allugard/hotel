@@ -32,7 +32,13 @@
             <td><c:out value="${item.price}"/></td>
             <td><c:out value="${item.number}"/></td>
             <td><c:out value="${item.apartmentsType}"/></td>
-            <td><a href="/deleteApartment?delete=${item.id}"/>Delete</td>
+            <td>
+                <form action="/profile/apartments" method="post">
+                    <input type="hidden" name="command" value="deleteApartment"/>
+                    <input type="hidden" name="delete" value=${item.id} />
+                    <button type="submit"><fmt:message key="apartments.delete"/></button>
+                </form>
+            </td>
         </tr>
     </table>
 

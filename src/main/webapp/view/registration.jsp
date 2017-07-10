@@ -14,7 +14,8 @@
 <body>
 <%@include file="/view/header.jsp" %>
 
-<form name="loginForm" method="POST" action="/registration/signup" autocomplete="on">
+<form method="POST" action="/signup" autocomplete="on">
+    <input type="hidden" name="command" value="signup"/>
     <div>
         <span><fmt:message key="email"/><label>*</label></span>
         <input type="text" name="login" required="required">

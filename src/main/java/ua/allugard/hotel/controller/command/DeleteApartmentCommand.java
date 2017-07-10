@@ -26,6 +26,6 @@ public class DeleteApartmentCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("delete"));
         apartmentService.delete(id);
-        return Page.PROFILE;
+        return Page.ALL_APARTMENTS;
     }
 }

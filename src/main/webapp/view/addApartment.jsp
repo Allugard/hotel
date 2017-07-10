@@ -16,10 +16,8 @@
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form name="addBookingForm" method="POST" action="addApartment/add" autocomplete="on">
-<%--
-    <input type="hidden" name="command" value="login"/>
---%>
+<form name="addBookingForm" method="POST" action="addApartment" autocomplete="on">
+    <input type="hidden" name="command" value="addApartment"/>
 
 
 

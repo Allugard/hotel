@@ -17,8 +17,8 @@
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
-    <input type="hidden" name="command" value="login"/>
+<form method="POST" action="login/signin" autocomplete="on">
+    <input type="hidden" name="command" value="signin"/>
     <div>
         <span><fmt:message key="email"/><label>*</label></span>
         <input type="text" name="login" required="required">

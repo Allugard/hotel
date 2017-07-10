@@ -34,7 +34,13 @@
             <td><c:out value="${item.persons}"/></td>
             <td><c:out value="${item.apartmentsType}"/></td>
             <td><c:out value="${item.status}"/></td>
-            <td><a href="/deleteBooking?delete=${item.id}"/>Delete</td>
+            <td>
+                <form action="/profile/bookings" method="post">
+                    <input type="hidden" name="command" value="deleteBooking"/>
+                    <input type="hidden" name="delete" value=${item.id} />
+                    <button type="submit"><fmt:message key="booking.delete"/></button>
+                </form>
+            </td>
         </tr>
     </table>
 

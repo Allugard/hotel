@@ -1,6 +1,5 @@
 package ua.allugard.hotel.controller.command;
 
-import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.BookingService;
@@ -8,29 +7,29 @@ import ua.allugard.hotel.util.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.time.ZoneId;
+import java.util.List;
 
 /**
  * Created by allugard on 08.07.17.
  */
-public class DeleteBookingCommand implements Command {
+public class BookingsByUserCommand implements Command {
 
     private BookingService bookingService;
 
-    public DeleteBookingCommand(BookingService bookingService) {
+    public BookingsByUserCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
-    public static DeleteBookingCommand getInstance() {
-        return new DeleteBookingCommand(BookingService.getInstance());
+    public static BookingsByUserCommand getInstance() {
+        return new BookingsByUserCommand(BookingService.getInstance());
     }
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        int id = Integer.parseInt(request.getParameter("delete"));
-
-        bookingService.delete(id);
+        List<Booking> bookings = null;
+        if (request.getSession().getAttribute("user") instanceof User) {
+             bookings = bookingService.findByUser(((User) request.getSession().getAttribute("user")).getUserAuthentication().getId());
+        }
+            request.setAttribute("bookings", bookings);
         return Page.BOOKINGS_BY_USER;
     }
 }

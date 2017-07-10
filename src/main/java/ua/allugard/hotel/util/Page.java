@@ -9,7 +9,8 @@ public interface Page {
     String MAIN = "index";
     String PROFILE = "profile";
     String ADD_BOOKING = "addBooking";
-    String BOOKINGS_BY_CLIENT = "bookingsByClient";
+    String BOOKINGS_BY_USER = "bookingsByUser";
     String ADD_APARTMENT = "addApartment";
     String ALL_APARTMENTS = "allApartments";
+    String PROCESSED_BOOKINGS = "processedBookings";
 }

@@ -12,24 +12,24 @@ import java.util.List;
 /**
  * Created by allugard on 08.07.17.
  */
-public class GetBookingsByClientCommand implements Command {
+public class ProcessedBookingsCommand implements Command {
 
     private BookingService bookingService;
 
-    public GetBookingsByClientCommand(BookingService bookingService) {
+    public ProcessedBookingsCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
-    public static GetBookingsByClientCommand getInstance() {
-        return new GetBookingsByClientCommand(BookingService.getInstance());
+    public static ProcessedBookingsCommand getInstance() {
+        return new ProcessedBookingsCommand(BookingService.getInstance());
     }
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         List<Booking> bookings = null;
         if (request.getSession().getAttribute("user") instanceof User) {
-             bookings = bookingService.findByUser(((User) request.getSession().getAttribute("user")).getUserAuthentication().getId());
+             bookings = bookingService.findProcessedBookings();
         }
             request.setAttribute("bookings", bookings);
-        return Page.BOOKINGS_BY_CLIENT;
+        return Page.PROCESSED_BOOKINGS;
     }
 }

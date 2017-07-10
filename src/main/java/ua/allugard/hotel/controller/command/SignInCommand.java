@@ -11,16 +11,16 @@ import java.util.Optional;
 /**
  * Created by allugard on 08.07.17.
  */
-public class AuthorizationCommand implements Command {
+public class SignInCommand implements Command {
 
     private UserService userService;
 
-    public AuthorizationCommand(UserService userService) {
+    public SignInCommand(UserService userService) {
         this.userService = userService;
     }
 
-    public static AuthorizationCommand getInstance() {
-        return new AuthorizationCommand(UserService.getInstance());
+    public static SignInCommand getInstance() {
+        return new SignInCommand(UserService.getInstance());
     }
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
