@@ -4,8 +4,44 @@
 
 
         <li><a href="/" class="lnk"><fmt:message key="main.page"/></a></li>
-        <li><a href="/login" class="lnk"><fmt:message key="login.page"/></a></li>
-        <li><a href="/registration" class="lnk"><fmt:message key="registration.page"/></a></li>
+        <c:choose>
+            <c:when test="${user == null}">
+                <%--<li>
+                    <a href="/login"><fmt:message key="login.page"/></a>
+                </li>--%>
+
+                <form action="/login" method="post">
+                    <input type="hidden" name="command" value="redirect"/>
+                    <input type="hidden" name="page" value="login"/>
+                    <input type="submit" value=<fmt:message key="login.page"/>/>
+                </form>
+
+
+
+                <li>
+                    <a href="/registration"><fmt:message key="registration.page"/></a>
+                </li>
+            </c:when>
+
+            <c:when test="${user != null}">
+                <li>
+                    <a href="/profile"><fmt:message key="profile.page"/></a>
+                </li>
+                <li>
+                    <fmt:message key="header.logged"/>
+                    <c:out value="${user.userAuthentication.login}"/>
+                </li>
+
+                <li>
+                    <a href="/logout"><fmt:message key="logout"/></a>
+                </li>
+                    <%--POST INSTEAD GET--%>
+               <%-- <form action="your_url" method="post">
+                        <button type="submit" name="your_name" value="your_value" class="btn-link">Go</button>
+                    </form>--%>
+            </c:when>
+
+        </c:choose>
 
 
         <%--<li>
@@ -41,7 +77,6 @@
             </form>
         </li>--%>
 
-        <c:out value="${language}"/>
 
         <li>
          <form>

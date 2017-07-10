@@ -14,6 +14,9 @@
 <body>
 <%@include file="/view/header.jsp" %>
 
+<%--
+<form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
+--%>
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
     <input type="hidden" name="command" value="login"/>
     <div>

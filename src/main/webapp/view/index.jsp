@@ -17,6 +17,5 @@
 
     <h1><fmt:message key="greetings"/></h1>
 
-
 </body>
 </html>
