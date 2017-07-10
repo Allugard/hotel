@@ -31,7 +31,7 @@ public class JdbcUserDao implements UserDao {
     private static final String DELETE_USER = "DELETE FROM `hotel`.`users` WHERE `id`=?;";
 
 
-    private static final String FIND_ALL = "SELECT * FROM user";
+    private static final String FIND_ALL = "SELECT * FROM users";
     private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
     private static final String FIND_BY_FULL_NAME = FIND_ALL + " WHERE last_name = ? AND first_name = ?";
 

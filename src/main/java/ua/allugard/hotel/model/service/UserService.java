@@ -51,6 +51,8 @@ public class UserService {
             userAuthentication = daoFactory.createUserAuthenticationDao().findUserByLogin(login);
             if (userAuthentication.isPresent() && correctPassword(userAuthentication.get(), password)) {
                 user = daoFactory.createUserDao().find(userAuthentication.get().getId());
+                user.get().setUserAuthentication(userAuthentication.get());
+
             }
         } catch (Exception e){
             e.printStackTrace();

@@ -3,8 +3,10 @@ package ua.allugard.hotel.util;
 /**
  * Created by allugard on 08.07.17.
  */
-public interface Path {
+public interface Commands {
     String MAIN = "/";
+
+    String REDIRECT = "redirect";
 
     String LOGIN = "/login";
     String LOGOUT = "/logout";

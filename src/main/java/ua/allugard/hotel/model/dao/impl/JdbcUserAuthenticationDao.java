@@ -23,8 +23,8 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
 
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_LOGIN = "login";
-    private static final String COLUMN_PASSWORD = "apartments_type";
-    private static final String COLUMN_USER_ROLE = "price";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_USER_ROLE = "user_role";
 
     private static final String INSERT_USER_AUTHENTICATION = "INSERT INTO `hotel`.`user_authentications` (`login`, `password`, `user_role`) VALUES (?, ?, ?); ";
     private static final String UPDATE_USER_AUTHENTICATION = "UPDATE `hotel`.`user_authentications` SET `login`=?, `password`=?, `user_role`=? WHERE `id`=?; ";

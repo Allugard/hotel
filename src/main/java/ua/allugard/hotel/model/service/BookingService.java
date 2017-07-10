@@ -34,6 +34,13 @@ public class BookingService {
         return created;
     }
 
+    public boolean delete(int id){
+        boolean deleted;
+        deleted = daoFactory.createBookingDao().delete(id);
+        return deleted;
+    }
+
+
     public List<Booking> findByUser(int userId){
         List<Booking> bookings;
         bookings= daoFactory.createBookingDao().findByUser(userId);
@@ -41,11 +48,9 @@ public class BookingService {
     }
 
     public List<Booking> findProcessedBookings(){
-        List<Booking> bookings = new ArrayList<>();
-            //TODO: add method
-
+        List<Booking> bookings;
+        bookings = daoFactory.createBookingDao().findProcessedBooking();
         return bookings;
     }
-
 
 }

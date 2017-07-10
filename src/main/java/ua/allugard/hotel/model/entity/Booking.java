@@ -2,6 +2,9 @@ package ua.allugard.hotel.model.entity;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * Created by allugard on 29.06.17.
@@ -15,6 +18,8 @@ public class Booking {
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private Status status;
+    private Apartment.ApartmentsType apartmentsType;
+    private int persons;
 
     public enum Status {
         PROCESSED,
@@ -35,6 +40,8 @@ public class Booking {
         private LocalDate dateFrom;
         private LocalDate dateTo;
         private Status status;
+        private Apartment.ApartmentsType apartmentsType;
+        private int persons;
 
         public Builder setId(int id) {
             this.id = id;
@@ -71,6 +78,26 @@ public class Booking {
             return this;
         }
 
+        public Builder setApartmentsType(Apartment.ApartmentsType apartmentsType) {
+            this.apartmentsType = apartmentsType;
+            return this;
+        }
+
+        public Builder setPersons(int persons) {
+            this.persons = persons;
+            return this;
+        }
+
+        public Builder setDateFrom(LocalDate dateFrom) {
+            this.dateFrom = dateFrom;
+            return this;
+        }
+
+        public Builder setDateTo(LocalDate dateTo) {
+            this.dateTo = dateTo;
+            return this;
+        }
+
         public Booking build() {
             Booking booking = new Booking();
             booking.setId(id);
@@ -80,6 +107,8 @@ public class Booking {
             booking.setDateTo(dateTo);
             booking.setStatus(status);
             booking.setUser(user);
+            booking.setApartmentsType(apartmentsType);
+            booking.setPersons(persons);
             return booking;
         }
     }
@@ -140,6 +169,23 @@ public class Booking {
         this.status = status;
     }
 
+    public Apartment.ApartmentsType getApartmentsType() {
+        return apartmentsType;
+    }
+
+    public void setApartmentsType(Apartment.ApartmentsType apartmentsType) {
+        this.apartmentsType = apartmentsType;
+    }
+
+    public int getPersons() {
+        return persons;
+    }
+
+    public void setPersons(int persons) {
+        this.persons = persons;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -166,5 +212,20 @@ public class Booking {
         result = 31 * result + (dateTo != null ? dateTo.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", user=" + user +
+                ", apartment=" + apartment +
+                ", bill=" + bill +
+                ", dateFrom=" + dateFrom +
+                ", dateTo=" + dateTo +
+                ", status=" + status +
+                ", apartmentsType=" + apartmentsType +
+                ", persons=" + persons +
+                '}';
     }
 }

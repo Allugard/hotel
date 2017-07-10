@@ -29,45 +29,45 @@ public class ApartmentService {
         return Holder.INSTANCE;
     }
 
-    Optional<Apartment> find(int id){
+    public Optional<Apartment> find(int id){
         Optional<Apartment> apartment;
         apartment = daoFactory.createApartmentDao().find(id);
         return apartment;
     }
 
-    Optional<Apartment> findByNumber(String number){
+    public Optional<Apartment> findByNumber(String number){
         Optional<Apartment> apartment;
         apartment = daoFactory.createApartmentDao().findByNumber(number);
         return apartment;
     }
 
-    List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType){
+    public List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType){
         List<Apartment> apartment;
         apartment = daoFactory.createApartmentDao().findFreeNumbers(dateFrom, dateTo, capacity, apartmentsType);
         return apartment;
     }
-    List<Apartment> findAll(){
+    public List<Apartment> findAll(){
         List<Apartment> apartment;
         apartment = daoFactory.createApartmentDao().findAll();
         return apartment;
     }
 
-    boolean create(Apartment apartment){
+    public boolean create(Apartment apartment){
         boolean created;
         created = daoFactory.createApartmentDao().create(apartment);
         return created;
     }
 
-    boolean update(Apartment apartment){
+    public boolean update(Apartment apartment){
         boolean updated;
         updated = daoFactory.createApartmentDao().update(apartment);
         return updated;
     }
 
-    boolean delete(Apartment apartment){
+    public boolean delete(int id){
         boolean deleted;
             //TODO add method deleteByApartmentId in BookingDao
-            deleted = daoFactory.createApartmentDao().delete(apartment.getId());
+            deleted = daoFactory.createApartmentDao().delete(id);
         return deleted;
     }
 

@@ -10,5 +10,5 @@ import java.util.Optional;
  */
 public interface BookingDao extends GenericDao<Booking> {
     List<Booking> findByUser(int userId);
-    List<Booking> findByApartment(int apartmentId);
+    List<Booking> findProcessedBooking();
 }
