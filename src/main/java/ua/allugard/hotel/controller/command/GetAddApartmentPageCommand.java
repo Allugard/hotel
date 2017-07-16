@@ -10,8 +10,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GetAddApartmentPageCommand implements Command {
 
+    private static class Holder {
+        static final GetAddApartmentPageCommand INSTANCE = new GetAddApartmentPageCommand();
+    }
+
     public static GetAddApartmentPageCommand getInstance() {
-        return new GetAddApartmentPageCommand();
+        return Holder.INSTANCE;
     }
 
     @Override

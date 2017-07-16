@@ -8,18 +8,18 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by allugard on 07.07.17.
  */
-public class GetRegistrationPageCommand implements Command {
+public class GetMainPageCommand implements Command {
 
     private static class Holder {
-        static final GetRegistrationPageCommand INSTANCE = new GetRegistrationPageCommand();
+        static final GetMainPageCommand INSTANCE = new GetMainPageCommand();
     }
 
-    public static GetRegistrationPageCommand getInstance() {
+    public static GetMainPageCommand getInstance() {
         return Holder.INSTANCE;
     }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        return Page.REGISTRATION;
+        return Page.MAIN;
     }
 }

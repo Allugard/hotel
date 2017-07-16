@@ -15,13 +15,18 @@ public class SignInCommand implements Command {
 
     private UserService userService;
 
-    public SignInCommand(UserService userService) {
+    SignInCommand(UserService userService) {
         this.userService = userService;
     }
 
-    public static SignInCommand getInstance() {
-        return new SignInCommand(UserService.getInstance());
+    private static class Holder {
+        static final SignInCommand INSTANCE = new SignInCommand(UserService.getInstance());
     }
+
+    public static SignInCommand getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String login = request.getParameter("login");

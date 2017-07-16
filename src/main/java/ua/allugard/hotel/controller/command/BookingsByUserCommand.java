@@ -2,6 +2,7 @@ package ua.allugard.hotel.controller.command;
 
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
+import ua.allugard.hotel.model.service.ApartmentService;
 import ua.allugard.hotel.model.service.BookingService;
 import ua.allugard.hotel.util.Page;
 
@@ -16,13 +17,18 @@ public class BookingsByUserCommand implements Command {
 
     private BookingService bookingService;
 
-    public BookingsByUserCommand(BookingService bookingService) {
+    BookingsByUserCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
-    public static BookingsByUserCommand getInstance() {
-        return new BookingsByUserCommand(BookingService.getInstance());
+    private static class Holder {
+        static final BookingsByUserCommand INSTANCE = new BookingsByUserCommand(BookingService.getInstance());
     }
+
+    public static BookingsByUserCommand getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         List<Booking> bookings = null;

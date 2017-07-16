@@ -14,12 +14,16 @@ public class DeleteApartmentCommand implements Command {
 
     private ApartmentService apartmentService;
 
-    public DeleteApartmentCommand(ApartmentService apartmentService) {
+    DeleteApartmentCommand(ApartmentService apartmentService) {
         this.apartmentService = apartmentService;
     }
 
+    private static class Holder {
+        static final DeleteApartmentCommand INSTANCE = new DeleteApartmentCommand(ApartmentService.getInstance());
+    }
+
     public static DeleteApartmentCommand getInstance() {
-        return new DeleteApartmentCommand(ApartmentService.getInstance());
+        return Holder.INSTANCE;
     }
 
     @Override

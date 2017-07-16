@@ -2,6 +2,7 @@ package ua.allugard.hotel.controller.command;
 
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.service.ApartmentService;
+import ua.allugard.hotel.model.service.BookingService;
 import ua.allugard.hotel.util.Page;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +15,18 @@ import java.util.List;
 public class AllApartmentsCommand implements Command{
     private ApartmentService apartmentService;
 
-    public AllApartmentsCommand(ApartmentService apartmentService) {
+    AllApartmentsCommand(ApartmentService apartmentService) {
         this.apartmentService = apartmentService;
     }
 
-    public static AllApartmentsCommand getInstance() {
-        return new AllApartmentsCommand(ApartmentService.getInstance());
+    private static class Holder {
+        static final AllApartmentsCommand INSTANCE = new AllApartmentsCommand(ApartmentService.getInstance());
     }
+
+    public static AllApartmentsCommand getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         List<Apartment> apartments;

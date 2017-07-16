@@ -4,6 +4,7 @@ import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.entity.UserAuthentication;
 import ua.allugard.hotel.model.service.UserService;
 import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,15 +20,23 @@ public class SignUpCommand implements Command {
         this.userService = userService;
     }
 
+    private static class Holder {
+        static final SignUpCommand INSTANCE = new SignUpCommand(UserService.getInstance());
+    }
+
     public static SignUpCommand getInstance() {
-        return new SignUpCommand(UserService.getInstance());
+        return Holder.INSTANCE;
     }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         User user = createUserFromRequest(request);
 //        System.out.println(user);
-        boolean st = userService.create(user);
+        try {
+            boolean st = userService.create(user);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
 //        System.out.println("SUC   " + st);
         return Page.MAIN;
     }

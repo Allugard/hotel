@@ -1,11 +1,15 @@
 package ua.allugard.hotel.controller.command;
 
+import ua.allugard.hotel.model.dao.util.ConnectionManager;
+import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.ApartmentService;
+import ua.allugard.hotel.model.service.BillService;
 import ua.allugard.hotel.model.service.BookingService;
 import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,16 +23,20 @@ public class AddApartmentCommand implements Command {
 
     private ApartmentService apartmentService;
 
-    public AddApartmentCommand(ApartmentService apartmentService) {
+    AddApartmentCommand(ApartmentService apartmentService) {
         this.apartmentService = apartmentService;
     }
 
+    private static class Holder {
+        static final AddApartmentCommand INSTANCE = new AddApartmentCommand(ApartmentService.getInstance());
+    }
+
     public static AddApartmentCommand getInstance() {
-        return new AddApartmentCommand(ApartmentService.getInstance());
+        return Holder.INSTANCE;
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws DaoException {
         Apartment apartment = createApartmentFromRequest(request);
         apartmentService.create(apartment);
         return Page.ADD_APARTMENT;

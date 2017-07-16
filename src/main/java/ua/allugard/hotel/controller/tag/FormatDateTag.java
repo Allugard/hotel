@@ -78,7 +78,7 @@ public class FormatDateTag extends TagSupport{
             // Create formatter
             if (this.pattern != null)
             {
-                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern (this.pattern);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern (this.pattern);
                 formatted = formatter.format (this.value);
             }
             else

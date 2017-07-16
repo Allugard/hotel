@@ -3,6 +3,7 @@ package ua.allugard.hotel.controller.command;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
+import ua.allugard.hotel.model.service.ApartmentService;
 import ua.allugard.hotel.model.service.BookingService;
 import ua.allugard.hotel.util.Page;
 
@@ -18,12 +19,16 @@ public class DeleteBookingCommand implements Command {
 
     private BookingService bookingService;
 
-    public DeleteBookingCommand(BookingService bookingService) {
+    DeleteBookingCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
+    private static class Holder {
+        static final DeleteBookingCommand INSTANCE = new DeleteBookingCommand(BookingService.getInstance());
+    }
+
     public static DeleteBookingCommand getInstance() {
-        return new DeleteBookingCommand(BookingService.getInstance());
+        return Holder.INSTANCE;
     }
 
     @Override
@@ -31,6 +36,6 @@ public class DeleteBookingCommand implements Command {
         int id = Integer.parseInt(request.getParameter("delete"));
 
         bookingService.delete(id);
-        return Page.BOOKINGS_BY_USER;
+        return BookingsByUserCommand.getInstance().execute(request, response);
     }
 }

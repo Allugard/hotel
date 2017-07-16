@@ -10,8 +10,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LogoutCommand implements Command {
 
+    private static class Holder {
+        static final LogoutCommand INSTANCE = new LogoutCommand();
+    }
+
     public static LogoutCommand getInstance() {
-        return new LogoutCommand();
+        return Holder.INSTANCE;
     }
 
     @Override

@@ -22,12 +22,16 @@ public class UpdateBookingCommand implements Command {
     private static java.text.DateFormat DATE_FORMAT = new java.text.SimpleDateFormat(DATE_PART);
 
 
-    public UpdateBookingCommand(BookingService bookingService) {
+    UpdateBookingCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
+    private static class Holder {
+        static final UpdateBookingCommand INSTANCE = new UpdateBookingCommand(BookingService.getInstance());
+    }
+
     public static UpdateBookingCommand getInstance() {
-        return new UpdateBookingCommand(BookingService.getInstance());
+        return Holder.INSTANCE;
     }
 
     @Override
@@ -35,15 +39,18 @@ public class UpdateBookingCommand implements Command {
 //        Booking s = ((Booking) request.getAttribute("update"));
 //        System.out.println("ТАКОЙ ИТЕМ" + s);
         Optional<Booking> booking = bookingService.find(Integer.parseInt(request.getParameter("update")));
+
         booking.get().setStatus(Booking.Status.REJECTED);
+
         bookingService.update(booking.get());
+
 //        try {
 //            booking = createBookingFromRequest(request);
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
 //        bookingService.create(booking);
-        return Page.PROFILE;
+        return ProcessedBookingsCommand.getInstance().execute(request, response);
     }
 
     private Booking createBookingFromRequest(HttpServletRequest request) throws ParseException {

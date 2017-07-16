@@ -2,6 +2,7 @@ package ua.allugard.hotel.controller;
 
 import ua.allugard.hotel.controller.command.Command;
 import ua.allugard.hotel.controller.command.CommandFactory;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,32 +16,43 @@ import java.io.IOException;
  * Created by allugard on 05.07.17.
  */
 public class FrontController extends HttpServlet {
+
     private CommandFactory commandFactory;
 
     public FrontController() {
-        System.out.println("FRONTCONTROLLER GOOD");
         commandFactory = CommandFactory.getInstance();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("POST");
-
         processRequest(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("GET");
-
         processRequest(request, response);
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Command command = commandFactory.getCommand(request);
-        String page = command.execute(request, response);
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/view/"+page+".jsp");
+        String page = executeCommand(request, response);
+        String path = "/view/"+page+".jsp";
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
+//        response.sendRedirect(request.getContextPath() + path);
         dispatcher.forward(request, response);
+    }
+
+    private String executeCommand(HttpServletRequest request, HttpServletResponse response) {
+        Command command = commandFactory.getCommand(request);
+//        Command command = null;
+
+        String page = null;
+        try {
+            page = command.execute(request, response);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+
+        return page;
     }
 
 

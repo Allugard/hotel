@@ -16,13 +16,18 @@ public class ProcessedBookingsCommand implements Command {
 
     private BookingService bookingService;
 
-    public ProcessedBookingsCommand(BookingService bookingService) {
+    ProcessedBookingsCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
-    public static ProcessedBookingsCommand getInstance() {
-        return new ProcessedBookingsCommand(BookingService.getInstance());
+    private static class Holder {
+        static final ProcessedBookingsCommand INSTANCE = new ProcessedBookingsCommand(BookingService.getInstance());
     }
+
+    public static ProcessedBookingsCommand getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         List<Booking> bookings = null;

@@ -10,9 +10,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GetAddBookingPageCommand implements Command {
 
-    public static GetAddBookingPageCommand getInstance() {
-        return new GetAddBookingPageCommand();
+    private static class Holder {
+        static final GetAddBookingPageCommand INSTANCE = new GetAddBookingPageCommand();
     }
+
+    public static GetAddBookingPageCommand getInstance() {
+        return Holder.INSTANCE;
+    }
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         return Page.ADD_BOOKING;

@@ -10,8 +10,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RedirectCommand implements Command {
 
+    private static class Holder {
+        static final RedirectCommand INSTANCE = new RedirectCommand();
+    }
+
     public static RedirectCommand getInstance() {
-        return new RedirectCommand();
+        return Holder.INSTANCE;
     }
 
         @Override

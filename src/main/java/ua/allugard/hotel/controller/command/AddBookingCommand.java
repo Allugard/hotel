@@ -4,9 +4,11 @@ import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.entity.UserAuthentication;
+import ua.allugard.hotel.model.service.ApartmentService;
 import ua.allugard.hotel.model.service.BookingService;
 import ua.allugard.hotel.model.service.UserService;
 import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,12 +26,16 @@ public class AddBookingCommand implements Command {
     private static java.text.DateFormat DATE_FORMAT = new java.text.SimpleDateFormat(DATE_PART);
 
 
-    public AddBookingCommand(BookingService bookingService) {
+    AddBookingCommand(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
+    private static class Holder {
+        static final AddBookingCommand INSTANCE = new AddBookingCommand(BookingService.getInstance());
+    }
+
     public static AddBookingCommand getInstance() {
-        return new AddBookingCommand(BookingService.getInstance());
+        return Holder.INSTANCE;
     }
 
     @Override
@@ -40,7 +46,11 @@ public class AddBookingCommand implements Command {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        bookingService.create(booking);
+        try {
+            bookingService.create(booking);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
         return Page.PROFILE;
     }
 
