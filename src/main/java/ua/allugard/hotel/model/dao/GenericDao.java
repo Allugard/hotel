@@ -1,5 +1,7 @@
 package ua.allugard.hotel.model.dao;
 
+import ua.allugard.hotel.util.exceptions.DaoException;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +14,7 @@ import java.util.Optional;
 public interface GenericDao<T> {
     Optional<T> find(int id);
     List<T> findAll();
-    boolean create(T t);
+    boolean create(T t) throws DaoException;
     boolean update(T t);
     boolean delete(int id);
 

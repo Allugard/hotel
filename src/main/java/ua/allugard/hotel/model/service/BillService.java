@@ -3,6 +3,7 @@ package ua.allugard.hotel.model.service;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.Bill;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import java.util.Optional;
  * Created by allugard on 05.07.17.
  */
 public class BillService {
+
     private ConnectionManager connectionManager;
     private DaoFactory daoFactory;
 
@@ -28,19 +30,23 @@ public class BillService {
 
     Optional<Bill> find(int id){
         Optional<Bill> bill;
-        bill = daoFactory.createBillDao().find(id);
+        bill = daoFactory.getBillDao().find(id);
         return bill;
     }
 
     boolean create(Bill bill){
-        boolean created;
-        created = daoFactory.createBillDao().create(bill);
+        boolean created = false;
+        try {
+            created = daoFactory.getBillDao().create(bill);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
         return created;
     }
 
     boolean delete(Bill bill){
         boolean deleted;
-        deleted = daoFactory.createBillDao().delete(bill.getId());
+        deleted = daoFactory.getBillDao().delete(bill.getId());
         return deleted;
     }
 }

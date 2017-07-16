@@ -4,6 +4,7 @@ import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.entity.UserAuthentication;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.util.Optional;
 
@@ -34,8 +35,8 @@ public class UserService {
         boolean updated = false;
         try {
             connectionManager.startTransaction();
-            updated = daoFactory.createUserDao().update(user);
-            updated = daoFactory.createUserAuthenticationDao().update(user.getUserAuthentication());
+            updated = daoFactory.getUserDao().update(user);
+            updated = daoFactory.getUserAuthenticationDao().update(user.getUserAuthentication());
             connectionManager.commit();
         }catch (Exception e){
             connectionManager.rollback();
@@ -47,29 +48,20 @@ public class UserService {
     public Optional<User> findUserByLoginPassword(String login, String password){
         Optional<User> user = Optional.empty();
         Optional<UserAuthentication> userAuthentication;
-        try {
-            userAuthentication = daoFactory.createUserAuthenticationDao().findUserByLogin(login);
-            if (userAuthentication.isPresent() && correctPassword(userAuthentication.get(), password)) {
-                user = daoFactory.createUserDao().find(userAuthentication.get().getId());
-                user.get().setUserAuthentication(userAuthentication.get());
-
-            }
-        } catch (Exception e){
-            e.printStackTrace();
+        userAuthentication = daoFactory.getUserAuthenticationDao().findUserByLogin(login);
+        if (userAuthentication.isPresent() && correctPassword(userAuthentication.get(), password)) {
+            user = daoFactory.getUserDao().find(userAuthentication.get().getId());
+            user.get().setUserAuthentication(userAuthentication.get());
         }
         return user;
     }
 
-    public boolean create(User user){
-        boolean created = false;
-        try {
-            connectionManager.startTransaction();
-            created = daoFactory.createUserAuthenticationDao().create(user.getUserAuthentication());
-            created = daoFactory.createUserDao().create(user);
-            connectionManager.commit();
-        } catch (Exception e){
-            connectionManager.rollback();
-        }
+    public boolean create(User user) throws DaoException {
+        boolean created;
+        connectionManager.startTransaction();
+        daoFactory.getUserAuthenticationDao().create(user.getUserAuthentication());
+        created = daoFactory.getUserDao().create(user);
+        connectionManager.commit();
         return created;
     }
 

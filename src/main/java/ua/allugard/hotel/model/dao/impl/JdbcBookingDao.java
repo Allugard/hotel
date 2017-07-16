@@ -1,10 +1,12 @@
 package ua.allugard.hotel.model.dao.impl;
 
+import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.BookingDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
+import ua.allugard.hotel.util.LogMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,16 +18,17 @@ import java.util.Optional;
  */
 public class JdbcBookingDao implements BookingDao {
 
+    private static final Logger LOGGER = Logger.getLogger(JdbcBookingDao.class);
     private ConnectionManager connectionManager;
-    private static final int COLUMN_ID_INDEX = 9;
-    private static final int COLUMN_USERS_ID_INDEX = 1;
-    private static final int COLUMN_APARTMENTS_ID_INDEX = 7;
-    private static final int COLUMN_DATE_FROM_INDEX = 2;
-    private static final int COLUMN_DATE_TO_INDEX = 3;
-    private static final int COLUMN_STATUS_INDEX = 4;
-    private static final int COLUMN_BILL_ID_INDEX = 8;
-    private static final int COLUMN_PERSONS_INDEX = 5;
-    private static final int COLUMN_APARTMENTS_TYPE_INDEX = 6;
+    private static final int COLUMN_ID_INDEX = 8;
+    private static final int COLUMN_USERS_ID_INDEX = 6;
+    private static final int COLUMN_APARTMENTS_ID_INDEX = 6;
+    private static final int COLUMN_DATE_FROM_INDEX = 1;
+    private static final int COLUMN_DATE_TO_INDEX = 2;
+    private static final int COLUMN_STATUS_INDEX = 3;
+    private static final int COLUMN_BILL_ID_INDEX = 7;
+    private static final int COLUMN_PERSONS_INDEX = 4;
+    private static final int COLUMN_APARTMENTS_TYPE_INDEX = 5;
 
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_DATE_FROM = "date_from";
@@ -34,8 +37,8 @@ public class JdbcBookingDao implements BookingDao {
     private static final String COLUMN_PERSONS = "persons";
     private static final String COLUMN_APARTMENTS_TYPE = "apartments_type";
 
-    private static final String INSERT_BOOKING = "INSERT INTO `hotel`.`bookings` (`users_id`, `date_from`, `date_to`, `status`, `persons`, `apartments_type`) VALUES (?, ?, ?, ?, ?, ?);";
-    private static final String UPDATE_BOOKING = "UPDATE `hotel`.`bookings` SET `users_id`=?, `date_from`=?, `date_to`=?, `status`=?, `persons`=?, `apartments_type`=?, `apartments_id`=?, `bills_id`=? WHERE `id`=?;";
+    private static final String INSERT_BOOKING = "INSERT INTO `hotel`.`bookings` (`date_from`, `date_to`, `status`, `persons`, `apartments_type`, `users_id`) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String UPDATE_BOOKING = "UPDATE `hotel`.`bookings` SET `date_from`=?, `date_to`=?, `status`=?, `persons`=?, `apartments_type`=?, `apartments_id`=?, `bills_id`=? WHERE `id`=?;";
     private static final String DELETE_BOOKING = "DELETE FROM `hotel`.`bookings` WHERE `id`=?;";
 
 
@@ -66,7 +69,7 @@ public class JdbcBookingDao implements BookingDao {
             ResultSet resultSet = statement.executeQuery();
             result = getBookingFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND + e.getMessage());
         }
         return result;
     }
@@ -80,7 +83,7 @@ public class JdbcBookingDao implements BookingDao {
             ResultSet resultSet = statement.executeQuery();
             result = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
         }
         return result;
     }
@@ -101,7 +104,7 @@ public class JdbcBookingDao implements BookingDao {
             insertedRow = statement.executeUpdate();
             booking.setId(generateId(statement));
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.CREATE + e.getMessage());
         }
         return insertedRow > 0;
 
@@ -133,7 +136,7 @@ public class JdbcBookingDao implements BookingDao {
             statement.setInt(COLUMN_ID_INDEX, booking.getId());
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.UPDATE + e.getMessage());
         }
         return updatedRow > 0;
 
@@ -148,7 +151,7 @@ public class JdbcBookingDao implements BookingDao {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.DELETE + e.getMessage());
         }
         return deletedRow > 0;
     }
@@ -162,7 +165,7 @@ public class JdbcBookingDao implements BookingDao {
             ResultSet resultSet = statement.executeQuery();
             result = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_BY_USER + e.getMessage());
         }
         return result;
     }
@@ -176,7 +179,7 @@ public class JdbcBookingDao implements BookingDao {
             ResultSet resultSet = statement.executeQuery();
             results = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_PROCESSED_BOOKINGS + e.getMessage());
         }
         return results;
     }

@@ -1,9 +1,13 @@
 package ua.allugard.hotel.model.dao.impl;
 
+import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.UserAuthenticationDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.UserAuthentication;
+import ua.allugard.hotel.util.LogMessage;
+import ua.allugard.hotel.util.exceptions.DaoException;
+import ua.allugard.hotel.util.exceptions.DuplicateLoginException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.Optional;
 public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
 
     private ConnectionManager connectionManager;
+    private static final Logger LOGGER = Logger.getLogger(JdbcUserAuthenticationDao.class);
     private static final int COLUMN_ID_INDEX = 4;
     private static final int COLUMN_LOGIN_INDEX = 1;
     private static final int COLUMN_PASSWORD_INDEX = 2;
@@ -57,7 +62,7 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             ResultSet resultSet = statement.executeQuery();
             result = getUserAuthenticationFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserAuthenticationDao.class.toString() + LogMessage.FIND + e.getMessage());
         }
         return result;
     }
@@ -71,13 +76,14 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             ResultSet resultSet = statement.executeQuery();
             result = getUserAuthenticationsFromResultSet(resultSet);
         } catch (SQLException e) {
+            LOGGER.info(JdbcUserAuthenticationDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
             e.printStackTrace();
         }
         return result;
     }
 
     @Override
-    public boolean create(UserAuthentication userAuthentication) {
+    public boolean create(UserAuthentication userAuthentication) throws DaoException {
         int insertedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -89,8 +95,11 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             insertedRow = statement.executeUpdate();
 
             userAuthentication.setId(generateId(statement));
+        } catch (SQLIntegrityConstraintViolationException e) {
+            LOGGER.error(e);
+            throw new DuplicateLoginException();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserAuthenticationDao.class.toString() + LogMessage.CREATE + e.getMessage());
         }
         return insertedRow > 0;
     }
@@ -110,7 +119,7 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             statement.setInt(COLUMN_ID_INDEX, userAuthentication.getId());
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserAuthenticationDao.class.toString() + LogMessage.UPDATE + e.getMessage());
         }
         return updatedRow > 0;
     }
@@ -124,7 +133,7 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserAuthenticationDao.class.toString() + LogMessage.DELETE + e.getMessage());
         }
         return deletedRow > 0;
     }
@@ -139,7 +148,7 @@ public class JdbcUserAuthenticationDao implements UserAuthenticationDao {
             ResultSet resultSet = statement.executeQuery();
             result = getUserAuthenticationFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserAuthenticationDao.class.toString() + LogMessage.DELETE + e.getMessage());
         }
         return result;
 

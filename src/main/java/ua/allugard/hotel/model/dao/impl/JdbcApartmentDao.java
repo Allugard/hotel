@@ -1,9 +1,12 @@
 package ua.allugard.hotel.model.dao.impl;
 
+import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.util.LogMessage;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -16,6 +19,7 @@ import java.util.Optional;
  */
 public class JdbcApartmentDao implements ApartmentDao {
 
+    private static final Logger LOGGER = Logger.getLogger(JdbcApartmentDao.class);
     private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 5;
     private static final int COLUMN_CAPACITY_INDEX = 1;
@@ -68,7 +72,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND + e.getMessage());
         }
         return result;
     }
@@ -82,14 +86,14 @@ public class JdbcApartmentDao implements ApartmentDao {
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentsFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
         }
         return result;
     }
 
     @Override
-    public boolean create(Apartment apartment) {
-        int insertedRow = 0;
+    public boolean create(Apartment apartment) throws DaoException {
+        int insertedRow;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement(INSERT_APARTMENT,
@@ -99,9 +103,10 @@ public class JdbcApartmentDao implements ApartmentDao {
             statement.setInt(COLUMN_PRICE_INDEX, apartment.getPrice());
             statement.setString(COLUMN_NUMBER_INDEX, apartment.getNumber());
             insertedRow = statement.executeUpdate();
-            apartment.setId(statement.getGeneratedKeys().getInt(1));
+            apartment.setId(generateId(statement));
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.CREATE + e.getMessage());
+            throw new DaoException();
         }
         return insertedRow > 0;
     }
@@ -119,7 +124,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             statement.setInt(COLUMN_ID_INDEX, apartment.getId());
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.UPDATE + e.getMessage());
         }
         return updatedRow > 0;
     }
@@ -133,7 +138,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.DELETE + e.getMessage());
         }
         return deletedRow > 0;
     }
@@ -148,7 +153,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND_BY_NUMBER + e.getMessage());
         }
         return result;
     }
@@ -166,7 +171,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentsFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND_FREE_NUMBER + e.getMessage());
         }
         return result;
     }

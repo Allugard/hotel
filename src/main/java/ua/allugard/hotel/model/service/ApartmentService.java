@@ -1,8 +1,10 @@
 package ua.allugard.hotel.model.service;
 
+import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,43 +33,32 @@ public class ApartmentService {
 
     public Optional<Apartment> find(int id){
         Optional<Apartment> apartment;
-        apartment = daoFactory.createApartmentDao().find(id);
-        return apartment;
-    }
-
-    public Optional<Apartment> findByNumber(String number){
-        Optional<Apartment> apartment;
-        apartment = daoFactory.createApartmentDao().findByNumber(number);
+        apartment = daoFactory.getApartmentDao().find(id);
         return apartment;
     }
 
     public List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType){
         List<Apartment> apartment;
-        apartment = daoFactory.createApartmentDao().findFreeNumbers(dateFrom, dateTo, capacity, apartmentsType);
+        apartment = daoFactory.getApartmentDao().findFreeNumbers(dateFrom, dateTo, capacity, apartmentsType);
         return apartment;
     }
+
     public List<Apartment> findAll(){
         List<Apartment> apartment;
-        apartment = daoFactory.createApartmentDao().findAll();
+        apartment = daoFactory.getApartmentDao().findAll();
         return apartment;
     }
 
-    public boolean create(Apartment apartment){
+    public boolean create(Apartment apartment) throws DaoException {
         boolean created;
-        created = daoFactory.createApartmentDao().create(apartment);
+        ApartmentDao apartmentDao = daoFactory.getApartmentDao();
+        created = apartmentDao.create(apartment);
         return created;
-    }
-
-    public boolean update(Apartment apartment){
-        boolean updated;
-        updated = daoFactory.createApartmentDao().update(apartment);
-        return updated;
     }
 
     public boolean delete(int id){
         boolean deleted;
-            //TODO add method deleteByApartmentId in BookingDao
-            deleted = daoFactory.createApartmentDao().delete(id);
+        deleted = daoFactory.getApartmentDao().delete(id);
         return deleted;
     }
 

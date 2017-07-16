@@ -3,8 +3,8 @@ package ua.allugard.hotel.model.service;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.Booking;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +22,11 @@ public class BookingService {
     }
 
     public Optional<Booking> find(int id) {
-        return daoFactory.createBookingDao().find(id);
+        return daoFactory.getBookingDao().find(id);
     }
 
     public boolean update(Booking booking) {
-        return daoFactory.createBookingDao().update(booking);
+        return daoFactory.getBookingDao().update(booking);
     }
 
     private static class Holder {
@@ -37,28 +37,28 @@ public class BookingService {
         return Holder.INSTANCE;
     }
 
-    public boolean create(Booking booking){
+    public boolean create(Booking booking) throws DaoException {
         boolean created;
-        created = daoFactory.createBookingDao().create(booking);
+        created = daoFactory.getBookingDao().create(booking);
         return created;
     }
 
     public boolean delete(int id){
         boolean deleted;
-        deleted = daoFactory.createBookingDao().delete(id);
+        deleted = daoFactory.getBookingDao().delete(id);
         return deleted;
     }
 
 
     public List<Booking> findByUser(int userId){
         List<Booking> bookings;
-        bookings= daoFactory.createBookingDao().findByUser(userId);
+        bookings= daoFactory.getBookingDao().findByUser(userId);
         return bookings;
     }
 
     public List<Booking> findProcessedBookings(){
         List<Booking> bookings;
-        bookings = daoFactory.createBookingDao().findProcessedBooking();
+        bookings = daoFactory.getBookingDao().findProcessedBooking();
         return bookings;
     }
 

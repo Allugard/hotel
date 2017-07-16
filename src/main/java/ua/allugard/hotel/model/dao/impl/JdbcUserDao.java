@@ -1,9 +1,11 @@
 package ua.allugard.hotel.model.dao.impl;
 
+import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.UserDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.User;
+import ua.allugard.hotel.util.LogMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class JdbcUserDao implements UserDao {
 
     private ConnectionManager connectionManager;
+    private static final Logger LOGGER = Logger.getLogger(JdbcUserDao.class);
     private static final int COLUMN_ID_INDEX = 1;
     private static final int COLUMN_FIRST_NAME_INDEX = 2;
     private static final int COLUMN_LAST_NAME_INDEX = 3;
@@ -57,7 +60,7 @@ public class JdbcUserDao implements UserDao {
             ResultSet resultSet = statement.executeQuery();
             result = getUserFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND + e.getMessage());
         }
         return result;
     }
@@ -71,7 +74,7 @@ public class JdbcUserDao implements UserDao {
             ResultSet resultSet = statement.executeQuery();
             result = getUsersFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
         }
         return result;
     }
@@ -88,7 +91,7 @@ public class JdbcUserDao implements UserDao {
             statement.setString(COLUMN_PHONE_INDEX, user.getPhone());
             insertedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.CREATE + e.getMessage());
         }
         return insertedRow > 0;
     }
@@ -106,7 +109,7 @@ public class JdbcUserDao implements UserDao {
             statement.setInt(5, user.getUserAuthentication().getId());
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.UPDATE + e.getMessage());
         }
         return updatedRow > 0;
     }
@@ -120,7 +123,7 @@ public class JdbcUserDao implements UserDao {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.DELETE + e.getMessage());
         }
         return deletedRow > 0;
     }
@@ -136,7 +139,7 @@ public class JdbcUserDao implements UserDao {
             ResultSet resultSet = statement.executeQuery();
             result = getUsersFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND_BY_FULL_NAME + e.getMessage());
         }
         return result;
     }

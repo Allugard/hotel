@@ -9,4 +9,5 @@ import java.util.Optional;
  */
 public interface UserAuthenticationDao extends GenericDao<UserAuthentication> {
     Optional<UserAuthentication> findUserByLogin(String login);
+
 }

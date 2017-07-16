@@ -1,9 +1,11 @@
 package ua.allugard.hotel.model.dao.impl;
 
+import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.BillDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Bill;
+import ua.allugard.hotel.util.LogMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.Optional;
  */
 public class JdbcBillDao implements BillDao {
 
+    private static final Logger LOGGER = Logger.getLogger(JdbcBillDao.class);
     private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 2;
     private static final int COLUMN_PRICE_INDEX = 1;
@@ -53,7 +56,7 @@ public class JdbcBillDao implements BillDao {
             ResultSet resultSet = statement.executeQuery();
             result = getBillFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBillDao.class.toString() + LogMessage.FIND + e.getMessage());
         }
         return result;
     }
@@ -67,7 +70,7 @@ public class JdbcBillDao implements BillDao {
             ResultSet resultSet = statement.executeQuery();
             result = getBillsFromResultSet(resultSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBillDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
         }
         return result;
     }
@@ -83,7 +86,7 @@ public class JdbcBillDao implements BillDao {
             insertedRow = statement.executeUpdate();
             bill.setId(statement.getGeneratedKeys().getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBillDao.class.toString() + LogMessage.CREATE + e.getMessage());
         }
         return insertedRow > 0;
     }
@@ -98,7 +101,7 @@ public class JdbcBillDao implements BillDao {
             statement.setInt(COLUMN_ID_INDEX, bill.getId());
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBillDao.class.toString() + LogMessage.UPDATE + e.getMessage());
         }
         return updatedRow > 0;
     }
@@ -112,7 +115,7 @@ public class JdbcBillDao implements BillDao {
             statement.setInt(1, id);
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.info(JdbcBillDao.class.toString() + LogMessage.DELETE + e.getMessage());
         }
         return deletedRow > 0;
     }
