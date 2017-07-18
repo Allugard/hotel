@@ -5,11 +5,16 @@ import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.BookingService;
 import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.Parameters;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,9 +23,6 @@ import java.util.Optional;
 public class UpdateBookingCommand implements Command {
 
     private BookingService bookingService;
-    private static String DATE_PART = "yyyy-mm-dd";
-    private static java.text.DateFormat DATE_FORMAT = new java.text.SimpleDateFormat(DATE_PART);
-
 
     UpdateBookingCommand(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -38,11 +40,18 @@ public class UpdateBookingCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 //        Booking s = ((Booking) request.getAttribute("update"));
 //        System.out.println("ТАКОЙ ИТЕМ" + s);
-        Optional<Booking> booking = bookingService.find(Integer.parseInt(request.getParameter("update")));
+//        Optional<Booking> booking = bookingService.find(Integer.parseInt(request.getParameter("update")));
 
-        booking.get().setStatus(Booking.Status.REJECTED);
+        List<Booking> bookings = createBookingsFromRequest(request);
 
-        bookingService.update(booking.get());
+        System.out.println(bookings);
+//        bookingService.update(booking);
+//        System.out.println("UPDAAAAAAAAAAAAAGE");
+//        System.out.println(request.getParameter("update"));
+//        System.out.println(Arrays.toString(request.getParameterValues("update")));
+//        booking.get().setStatus(Booking.Status.REJECTED);
+
+//        bookingService.update(booking.get());
 
 //        try {
 //            booking = createBookingFromRequest(request);
@@ -53,15 +62,49 @@ public class UpdateBookingCommand implements Command {
         return ProcessedBookingsCommand.getInstance().execute(request, response);
     }
 
-    private Booking createBookingFromRequest(HttpServletRequest request) throws ParseException {
-        return new Booking.Builder()
-                .setDateFrom(DATE_FORMAT.parse(request.getParameter("dateFrom")).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .setDateTo(DATE_FORMAT.parse(request.getParameter("dateTo")).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .setPersons(Integer.parseInt(request.getParameter("persons")))
-                .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter("apartmentsType").toUpperCase()))
+    private List<Booking> createBookingsFromRequest(HttpServletRequest request) {
+        List<Booking> bookings = new ArrayList<>();
+        for (int i = 0; i < request.getParameterValues(Parameters.ID).length; i++) {
+            Booking booking = new Booking.Builder()
+                    .setId(Integer.parseInt(request.getParameterValues(Parameters.ID)[i]))
+                    .setDateFrom(LocalDate.parse(request.getParameterValues(Parameters.DATE_FROM)[i]))
+                    .setDateTo(LocalDate.parse(request.getParameterValues(Parameters.DATE_TO)[i]))
+                    .setPersons(Integer.parseInt(request.getParameterValues(Parameters.PERSONS)[i]))
+                    .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameterValues(Parameters.APARTMENTS_TYPE)[i].toUpperCase()))
+                    .build();
+
+            if(request.getParameterValues(Parameters.STATUS)[i].equals(Booking.Status.REJECTED.toString())){
+                booking.setStatus(Booking.Status.REJECTED);
+            } else {
+                System.out.println(request.getParameterValues(Parameters.STATUS)[i]);
+                booking.setStatus(Booking.Status.CONFIRMED);
+                booking.setApartment(new Apartment.Builder()
+                        .setId(Integer.parseInt(request.getParameterValues(Parameters.STATUS)[i]))
+                        .build());
+            }
+            System.out.println(booking);
+            bookings.add(booking);
+        }
+/*        Booking booking = new Booking.Builder()
+                .setId(Integer.parseInt(request.getParameter(Parameters.ID)))
+                .setDateFrom(LocalDate.parse(request.getParameter(Parameters.DATE_FROM)))
+                .setDateTo(LocalDate.parse(request.getParameter(Parameters.DATE_TO)))
+                .setPersons(Integer.parseInt(request.getParameter(Parameters.PERSONS)))
+                .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter(Parameters.APARTMENTS_TYPE).toUpperCase()))
                 .setStatus(Booking.Status.PROCESSED)
-                .setUser(((User) request.getSession().getAttribute("user")))
+                .setUser(((User) request.getSession().getAttribute(Parameters.USER)))
                 .build();
+
+        if(request.getParameter(Parameters.STATUS).equals(Booking.Status.REJECTED.toString())){
+            booking.setStatus(Booking.Status.REJECTED);
+        } else {
+            booking.setStatus(Booking.Status.CONFIRMED);
+            booking.setApartment(new Apartment.Builder()
+                    .setId(Integer.parseInt(request.getParameter(Parameters.STATUS)))
+                    .build());
+        }*/
+
+        return bookings;
     }
 
 }

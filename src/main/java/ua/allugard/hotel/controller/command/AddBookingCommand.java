@@ -3,18 +3,19 @@ package ua.allugard.hotel.controller.command;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
-import ua.allugard.hotel.model.entity.UserAuthentication;
-import ua.allugard.hotel.model.service.ApartmentService;
 import ua.allugard.hotel.model.service.BookingService;
-import ua.allugard.hotel.model.service.UserService;
+import ua.allugard.hotel.util.Messages;
 import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.Parameters;
+import ua.allugard.hotel.util.Validator;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by allugard on 08.07.17.
@@ -22,9 +23,6 @@ import java.time.ZoneId;
 public class AddBookingCommand implements Command {
 
     private BookingService bookingService;
-    private static String DATE_PART = "yyyy-mm-dd";
-    private static java.text.DateFormat DATE_FORMAT = new java.text.SimpleDateFormat(DATE_PART);
-
 
     AddBookingCommand(BookingService bookingService) {
         this.bookingService = bookingService;
@@ -39,29 +37,54 @@ public class AddBookingCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
-        Booking booking = null;
-        try {
-            booking = createBookingFromRequest(request);
-        } catch (ParseException e) {
-            e.printStackTrace();
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws DaoException {
+        Booking booking = createBookingFromRequest(request);
+
+        List<String> errors = validate(booking);
+
+        if(!errors.isEmpty()){
+            setAttributesToRequest(request, booking, errors);
+            return Page.ADD_BOOKING;
         }
-        try {
-            bookingService.create(booking);
-        } catch (DaoException e) {
-            e.printStackTrace();
-        }
+
+        bookingService.create(booking);
+
         return Page.PROFILE;
     }
 
-    private Booking createBookingFromRequest(HttpServletRequest request) throws ParseException {
+    private void setAttributesToRequest(HttpServletRequest request, Booking booking, List<String> errors) {
+        request.setAttribute(Parameters.ERRORS, errors);
+        request.setAttribute(Parameters.DATE_FROM, booking.getDateFrom());
+        request.setAttribute(Parameters.DATE_TO, booking.getDateTo());
+        request.setAttribute(Parameters.PERSONS, booking.getPersons());
+        request.setAttribute(Parameters.APARTMENTS_TYPE, booking.getApartmentsType().toString());
+    }
+
+
+    private List<String> validate(Booking booking) {
+        List<String> errors = new ArrayList<>();
+
+        Validator validator = Validator.getInstance();
+
+        if(!validator.validateDate(booking.getDateFrom(), booking.getDateTo())){
+            errors.add(Messages.INVALID_DATE);
+        }
+
+        if(!validator.validateCapacity(booking.getPersons())){
+            errors.add(Messages.INVALID_PERSONS);
+        }
+
+        return errors;
+    }
+
+    private Booking createBookingFromRequest(HttpServletRequest request) {
         return new Booking.Builder()
-                .setDateFrom(DATE_FORMAT.parse(request.getParameter("dateFrom")).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .setDateTo(DATE_FORMAT.parse(request.getParameter("dateTo")).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .setPersons(Integer.parseInt(request.getParameter("persons")))
-                .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter("apartmentsType").toUpperCase()))
+                .setDateFrom(LocalDate.parse(request.getParameter(Parameters.DATE_FROM)))
+                .setDateTo(LocalDate.parse(request.getParameter(Parameters.DATE_TO)))
+                .setPersons(Integer.parseInt(request.getParameter(Parameters.PERSONS)))
+                .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter(Parameters.APARTMENTS_TYPE).toUpperCase()))
                 .setStatus(Booking.Status.PROCESSED)
-                .setUser(((User) request.getSession().getAttribute("user")))
+                .setUser(((User) request.getSession().getAttribute(Parameters.USER)))
                 .build();
     }
 

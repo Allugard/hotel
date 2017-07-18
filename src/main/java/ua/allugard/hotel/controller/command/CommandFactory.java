@@ -64,10 +64,12 @@ public class CommandFactory {
 
     public Command getCommand(HttpServletRequest request) {
         String path = request.getServletPath();
+        System.out.println(path);
 //        String action = request.getParameter("command");
 //        System.out.println("ACTION" + action);
 //        System.out.println(request.getAttribute("command"));
         Command command = commands.get(path);
+        System.out.println(command.getClass());
 //        if (command == null){
 //            command = commands.get("default");
 //        }
