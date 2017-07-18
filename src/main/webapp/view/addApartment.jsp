@@ -16,37 +16,39 @@
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form name="addBookingForm" method="POST" action="addApartment" autocomplete="on">
+<form name="addBookingForm" method="POST" action="/profile/addApartment/add" autocomplete="on">
     <input type="hidden" name="command" value="addApartment"/>
-
-
 
     <div>
         <span><fmt:message key="apartments.capacity"/><label>*</label></span>
-        <input type="number" name="capacity" required="required">
+        <input type="number" value="${capacity}" name="capacity" required="required">
     </div>
 
     <div>
         <span><fmt:message key="apartments.price"/><label>*</label></span>
-        <input type="number" name="price" required="required">
+        <input type="number" value="${price}" name="price" required="required">
     </div>
 
     <div>
         <span><fmt:message key="apartments.number"/><label>*</label></span>
-        <input type="text" name="number" required="required">
+        <input type="text" value="${number}" name="number" required="required">
     </div>
 
     <div>
     <span><fmt:message key="apartments.apartments.type"/><label>*</label></span>
 
         <select name="apartmentsType" required=required>
-            <option value="Standart">Standart</option>
-            <option value="Suite">Suite</option>
+            <option value="Standart" ${apartmentsType == 'standart' ? 'selected' : ''}>Standart</option>
+            <option value="Suite" ${apartmentsType == 'suite' ? 'selected' : ''}>Suite</option>
         </select>
     </div>
 
     <input type="submit" value=<fmt:message key="bookings.create"/>>
 </form>
+<c:forEach items="${errors}" var="item">
+    <fmt:message key="${item}"/>
+    <br>
+</c:forEach>
 
 
 </body>

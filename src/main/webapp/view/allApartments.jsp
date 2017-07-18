@@ -33,7 +33,7 @@
             <td><c:out value="${item.number}"/></td>
             <td><c:out value="${item.apartmentsType}"/></td>
             <td>
-                <form action="/profile/apartments" method="post">
+                <form action="/profile/apartments/delete" method="post">
                     <input type="hidden" name="command" value="deleteApartment"/>
                     <input type="hidden" name="delete" value=${item.id} />
                     <button type="submit"><fmt:message key="apartments.delete"/></button>

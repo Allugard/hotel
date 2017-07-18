@@ -3,6 +3,7 @@
     <ul>
 
 
+        <c:out value="${language}"/>
         <%--<li><a href="/" class="lnk"><fmt:message key="main.page"/></a></li>--%>
         <form action="/" method="post">
             <input type="hidden" name="command" value="redirect"/>

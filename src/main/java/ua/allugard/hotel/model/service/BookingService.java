@@ -29,6 +29,11 @@ public class BookingService {
         return daoFactory.getBookingDao().update(booking);
     }
 
+    public int getNumberOfPagesForProcessedBookings() {
+        int numberOfPages = daoFactory.getBookingDao().getNumberOfPagesForProcessedBookings();
+        return numberOfPages;
+    }
+
     private static class Holder {
         static final BookingService INSTANCE = new BookingService(ConnectionManager.getInstance(), DaoFactory.getInstance());
     }
@@ -56,9 +61,9 @@ public class BookingService {
         return bookings;
     }
 
-    public List<Booking> findProcessedBookings(){
+    public List<Booking> findProcessedBookings(int firstRecord, int recordsPerPage){
         List<Booking> bookings;
-        bookings = daoFactory.getBookingDao().findProcessedBooking();
+        bookings = daoFactory.getBookingDao().findProcessedBooking(firstRecord, recordsPerPage);
         return bookings;
     }
 

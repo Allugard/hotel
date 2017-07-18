@@ -5,6 +5,7 @@ package ua.allugard.hotel.util;
  */
 public interface Page {
     String REGISTRATION = "registration";
+    String ERROR= "error";
     String LOGIN = "login";
     String MAIN = "index";
     String PROFILE = "profile";

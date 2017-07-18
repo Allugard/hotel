@@ -5,6 +5,7 @@ import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.util.LogMessage;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
@@ -38,14 +39,14 @@ public class JdbcApartmentDao implements ApartmentDao {
     private static final String DELETE_APARTMENT = "DELETE FROM `hotel`.`apartments` WHERE `id`=?;";
 
 
-    private static final String FIND_ALL = "SELECT * FROM apartments";
-    private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
-    private static final String FIND_BY_NUMBER = FIND_ALL + " WHERE number = ?";
+    private static final String FIND_ALL = "SELECT * FROM apartments ";
+    private static final String FIND_BY_ID = FIND_ALL + "WHERE id = ?";
+    private static final String FIND_BY_NUMBER = FIND_ALL + "WHERE number = ?";
     private static final String FIND_FREE_NUMBER = FIND_ALL +
-                                                         "WHERE apartments.id NOT INT (" +
-                                                                            "SELECT bookings.appartments_id " +
+                                                         "WHERE apartments.id NOT IN (" +
+                                                                            "SELECT bookings.apartments_id " +
                                                                             "FROM apartments " +
-                                                                            "INNER JOIN bookings ON bookings.appartments_id = apartments.id" +
+                                                                            "INNER JOIN bookings ON bookings.apartments_id = apartments.id " +
                                                                             "WHERE status = 'confirmed' and (? > bookings.date_to OR  ? < bookings.date_from)) " +
                                                           "AND apartments.apartments_type = ? and apartments.capacity = ?";
 
@@ -159,15 +160,15 @@ public class JdbcApartmentDao implements ApartmentDao {
     }
 
     @Override
-    public List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType) {
+    public List<Apartment> findFreeApartments(Booking booking) {
         List<Apartment> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement(FIND_FREE_NUMBER)){
-            statement.setDate(1, Date.valueOf(dateFrom));
-            statement.setDate(2, Date.valueOf(dateTo));
-            statement.setInt(3, capacity);
-            statement.setString(4, apartmentsType.toString());
+            statement.setDate(1, Date.valueOf(booking.getDateFrom()));
+            statement.setDate(2, Date.valueOf(booking.getDateTo()));
+            statement.setInt(4, booking.getPersons());
+            statement.setString(3, booking.getApartmentsType().toString());
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentsFromResultSet(resultSet);
         } catch (SQLException e) {

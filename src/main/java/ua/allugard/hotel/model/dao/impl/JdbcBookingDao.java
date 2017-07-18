@@ -46,6 +46,7 @@ public class JdbcBookingDao implements BookingDao {
     private static final String FIND_BY_ID = FIND_ALL + "WHERE id = ?";
     private static final String FIND_BY_USER = FIND_ALL + "INNER JOIN users ON bookings.users_id = users.id";
     private static final String FIND_PROCESSED = FIND_ALL + "WHERE status = \"processed\"";
+    private static final String LIMIT = "LIMIT ?,? ";
 
     JdbcBookingDao(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -171,17 +172,44 @@ public class JdbcBookingDao implements BookingDao {
     }
 
     @Override
-    public List<Booking> findProcessedBooking() {
+    public List<Booking> findProcessedBooking(int firstRecord, int recordsPerPage) {
         List<Booking> results = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
-                     connection.prepareStatement(FIND_PROCESSED)){
+                     connection.prepareStatement(FIND_PROCESSED + LIMIT)){
+            statement.setInt(1, firstRecord);
+            statement.setInt(2, recordsPerPage);
             ResultSet resultSet = statement.executeQuery();
             results = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_PROCESSED_BOOKINGS + e.getMessage());
         }
         return results;
+    }
+
+    @Override
+    public int getNumberOfPagesForProcessedBookings() {
+        int results = 0;
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_PROCESSED,
+                             ResultSet.TYPE_SCROLL_INSENSITIVE,
+                             ResultSet.CONCUR_READ_ONLY)){
+            ResultSet resultSet = statement.executeQuery();
+            results = getRowCount(resultSet);
+        } catch (SQLException e) {
+            LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.GET_NUMBER_OF_PAGES_FOR_PROCESSED_BOOKINGS + e.getMessage());
+        }
+        return results;
+    }
+
+    private int getRowCount(ResultSet resultSet) throws SQLException {
+        int rowCount = 0;
+        if(resultSet.isBeforeFirst()) {
+            resultSet.last();
+            rowCount = resultSet.getRow();
+        }
+        return rowCount;
     }
 
     private List<Booking> getBookingsFromResultSet(ResultSet resultSet) throws SQLException {

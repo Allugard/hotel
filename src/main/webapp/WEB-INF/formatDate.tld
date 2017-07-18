@@ -6,7 +6,7 @@
         version="2.1">
 
     <tlib-version>1.0</tlib-version>
-    <short-name>myshortname</short-name>
+    <short-name>formatDate</short-name>
     <uri>http://allugard.ua</uri>
 
     <tag>

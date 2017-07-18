@@ -1,6 +1,7 @@
 package ua.allugard.hotel.model.dao;
 
 import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.model.entity.Booking;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,5 +12,5 @@ import java.util.Optional;
  */
 public interface ApartmentDao extends GenericDao<Apartment> {
     Optional<Apartment> findByNumber(String number);
-    List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType);
+    List<Apartment> findFreeApartments(Booking booking);
 }

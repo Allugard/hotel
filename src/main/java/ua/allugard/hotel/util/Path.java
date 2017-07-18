@@ -5,20 +5,20 @@ package ua.allugard.hotel.util;
  */
 public interface Path {
     String MAIN = "/";
-
     String LOGIN = "/login";
     String LOGOUT = "/logout";
     String PROFILE = "/profile";
-    String AUTHORIZATION = "/login/authorization";
     String REGISTRATION = "/registration";
-    String SIGN_UP = "/registration/signup";
-    String ADD_BOOKING_PAGE = "/addBooking";
-    String ADD_BOOKING = "/addBooking/add";
-    String VIEW_BOOKINGS = "/viewBookings";
-    String DELETE_BOOKING = "/deleteBooking";
-    String ADD_APARTMENT_PAGE = "/addApartment";
-    String ADD_APARTMENT = "/addApartment/add";
-    String VIEW_ALL_APARTMENTS = "/allApartments";
+    String SIGN_UP = "/signup";
+    String SIGN_IN = "/login/signin";
+    String ADD_BOOKING_PAGE = "/profile/addBooking";
+    String ADD_BOOKING = "/profile/addBooking/add";
+    String DELETE_BOOKING = "/profile/bookings/delete";
+    String UPDATE_BOOKING = "/profile/processedBookings/update";
+    String ADD_APARTMENT_PAGE = "/profile/addApartment";
+    String ADD_APARTMENT = "/profile/addApartment/add";
+    String ALL_APARTMENTS = "/profile/apartments";
     String DELETE_APARTMENT = "/deleteApartment";
-
+    String PROCESSED_BOOKINGS = "/profile/processedBookings";
+    String BOOKINGS_BY_USER = "/profile/bookings";
 }

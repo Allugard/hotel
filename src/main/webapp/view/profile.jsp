@@ -50,7 +50,7 @@
                 <button type="submit"><fmt:message key="apartments.page"/></button>
             </form>
 
-            <form action="/profile/processBooking" method="post">
+            <form action="/profile/processedBookings" method="post">
                 <input type="hidden" name="command" value="processedBookings"/>
                 <button type="submit"><fmt:message key="booking.processed.page"/></button>
             </form>

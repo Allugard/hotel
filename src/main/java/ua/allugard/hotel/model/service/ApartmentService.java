@@ -4,9 +4,9 @@ import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,10 +36,12 @@ public class ApartmentService {
         apartment = daoFactory.getApartmentDao().find(id);
         return apartment;
     }
-
-    public List<Apartment> findFreeNumbers(LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType){
+/*
+    LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType
+*/
+    public List<Apartment> findFreeApartments(Booking booking){
         List<Apartment> apartment;
-        apartment = daoFactory.getApartmentDao().findFreeNumbers(dateFrom, dateTo, capacity, apartmentsType);
+        apartment = daoFactory.getApartmentDao().findFreeApartments(booking);
         return apartment;
     }
 

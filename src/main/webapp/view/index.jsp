@@ -17,5 +17,9 @@
 
     <h1><fmt:message key="greetings"/></h1>
 
+    <c:if test="${not empty requestScope.completedRegistration}">
+        <fmt:message key="${completedRegistration}"/>
+    </c:if>
+
 </body>
 </html>

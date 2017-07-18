@@ -14,14 +14,19 @@
 <body>
 <%@include file="/view/header.jsp" %>
 
+<%
+    request.setCharacterEncoding("UTF-8");
+%>
+
+ПРИВЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕТ
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form method="POST" action="login/signin" autocomplete="on">
+<form method="POST" action="/login/signin" autocomplete="on">
     <input type="hidden" name="command" value="signin"/>
     <div>
         <span><fmt:message key="email"/><label>*</label></span>
-        <input type="text" name="login" required="required">
+        <input type="text" name="login" value="${login}" required="required">
     </div>
     <div>
         <span><fmt:message key="password"/><label>*</label></span>
@@ -31,5 +36,15 @@
     <input type="submit" value=<fmt:message key="sign.in"/>>
 </form>
 
+<c:forEach items="${errors}" var="item">
+    <fmt:message key="${item}"/>
+    <br>
+</c:forEach>
+
+<%--
+<c:if test="${not empty requestScope.errorLoginPassMessage}">
+    <fmt:message key="${errorLoginPassMessage}"/>
+</c:if>
+--%>
 
 </body></html>
