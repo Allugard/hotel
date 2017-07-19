@@ -28,4 +28,6 @@ public interface Parameters {
     String FREE_NUMBERS = "freeNumbersForBooking";
     String NUMBER_OF_PAGES = "noOfPages";
     String CURRENT_PAGE = "currentPage";
+    String DELETE = "delete";
+    String FIND = "find";
 }

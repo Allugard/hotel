@@ -3,8 +3,8 @@ package ua.allugard.hotel.model.service;
 import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
+import ua.allugard.hotel.model.dto.BookingDto;
 import ua.allugard.hotel.model.entity.Apartment;
-import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.util.List;
@@ -39,9 +39,9 @@ public class ApartmentService {
 /*
     LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType
 */
-    public List<Apartment> findFreeApartments(Booking booking) throws DaoException {
+    public List<Apartment> findFreeApartments(BookingDto bookingDto) throws DaoException {
         List<Apartment> apartment;
-        apartment = daoFactory.getApartmentDao().findFreeApartments(booking);
+        apartment = daoFactory.getApartmentDao().findFreeApartments(bookingDto);
         return apartment;
     }
 

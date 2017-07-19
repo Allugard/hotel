@@ -55,10 +55,10 @@ public class FrontController extends HttpServlet {
         } catch (DaoException e) {
             page = Page.ERROR;
             LOGGER.error(LogMessage.ERROR_IN_DAO_LAYER + e);
-        } catch (Exception e){
+        } /*catch (Exception e){
             page = Page.ERROR;
             LOGGER.error(e);
-        }
+        }*/
 
         return page;
     }

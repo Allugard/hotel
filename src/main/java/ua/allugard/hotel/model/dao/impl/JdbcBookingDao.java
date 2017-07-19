@@ -22,7 +22,7 @@ public class JdbcBookingDao implements BookingDao {
     private static final Logger LOGGER = Logger.getLogger(JdbcBookingDao.class);
     private ConnectionManager connectionManager;
     private static final int COLUMN_ID_INDEX = 8;
-    private static final int COLUMN_USERS_ID_INDEX = 6;
+    private static final int COLUMN_USERS_ID_INDEX = 7;
     private static final int COLUMN_APARTMENTS_ID_INDEX = 6;
     private static final int COLUMN_DATE_FROM_INDEX = 1;
     private static final int COLUMN_DATE_TO_INDEX = 2;
@@ -38,7 +38,7 @@ public class JdbcBookingDao implements BookingDao {
     private static final String COLUMN_PERSONS = "persons";
     private static final String COLUMN_APARTMENTS_TYPE = "apartments_type";
 
-    private static final String INSERT_BOOKING = "INSERT INTO `hotel`.`bookings` (`date_from`, `date_to`, `status`, `persons`, `apartments_type`, `users_id`) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_BOOKING = "INSERT INTO `hotel`.`bookings` (`date_from`, `date_to`, `status`, `persons`, `apartments_type`, `apartments_id`, `users_id`) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String UPDATE_BOOKING = "UPDATE `hotel`.`bookings` SET `date_from`=?, `date_to`=?, `status`=?, `persons`=?, `apartments_type`=?, `apartments_id`=?, `bills_id`=? WHERE `id`=?;";
     private static final String DELETE_BOOKING = "DELETE FROM `hotel`.`bookings` WHERE `id`=?;";
 
@@ -104,10 +104,12 @@ public class JdbcBookingDao implements BookingDao {
             statement.setTimestamp(COLUMN_DATE_TO_INDEX, Timestamp.valueOf(booking.getDateTo().atStartOfDay()));
             statement.setString(COLUMN_STATUS_INDEX, booking.getStatus().toString());
             statement.setInt(COLUMN_PERSONS_INDEX, booking.getPersons());
+            statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, booking.getApartmentsType().toString());
             insertedRow = statement.executeUpdate();
             booking.setId(generateId(statement));
         } catch (SQLException e) {
+            e.printStackTrace();
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.CREATE + e.getMessage());
             throw new DaoException();
         }
@@ -126,17 +128,16 @@ public class JdbcBookingDao implements BookingDao {
             statement.setString(COLUMN_STATUS_INDEX, booking.getStatus().toString());
             statement.setInt(COLUMN_PERSONS_INDEX, booking.getPersons());
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, booking.getApartmentsType().toString());
+            statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
             if(booking.getUser() != null) {
                 statement.setInt(COLUMN_USERS_ID_INDEX, booking.getUser().getUserAuthentication().getId());
             } else {
                 statement.setNull(COLUMN_USERS_ID_INDEX, Types.INTEGER);
             }
-            if (booking.getBill() != null || booking.getApartment() != null) {
+            if (booking.getBill() != null) {
                 statement.setInt(COLUMN_BILL_ID_INDEX, booking.getBill().getId());
-                statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
             } else {
                 statement.setNull(COLUMN_BILL_ID_INDEX, Types.INTEGER);
-                statement.setNull(COLUMN_APARTMENTS_ID_INDEX, Types.INTEGER);
             }
             statement.setInt(COLUMN_ID_INDEX, booking.getId());
             updatedRow = statement.executeUpdate();

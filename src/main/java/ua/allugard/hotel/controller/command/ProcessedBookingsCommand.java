@@ -1,5 +1,6 @@
 package ua.allugard.hotel.controller.command;
 
+import ua.allugard.hotel.model.dto.BookingDto;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.service.ApartmentService;
@@ -41,6 +42,7 @@ public class ProcessedBookingsCommand implements Command {
         int page = getPage(request);
 
         List<Booking> bookings = bookingService.findProcessedBookings((page - 1) * RECORDS_PER_PAGE, RECORDS_PER_PAGE);
+
         int numberOfPages = getNumberOfPages();
         List<List<Apartment>> freeNumbersForBooking = getFreeNumbers(bookings);
 
@@ -59,9 +61,19 @@ public class ProcessedBookingsCommand implements Command {
     private List<List<Apartment>> getFreeNumbers(List<Booking> bookings) throws DaoException {
         List<List<Apartment>> freeNumbersForBooking = new ArrayList<>();
         for (Booking booking: bookings) {
-            freeNumbersForBooking.add(apartmentService.findFreeApartments(booking));
+            BookingDto bookingDto = createBookingDtoFromBooking(booking);
+            freeNumbersForBooking.add(apartmentService.findFreeApartments(bookingDto));
         }
         return freeNumbersForBooking;
+    }
+
+    private BookingDto createBookingDtoFromBooking(Booking booking) {
+        return new BookingDto.Builder()
+                .setApartmentsType(booking.getApartmentsType())
+                .setDateFrom(booking.getDateFrom())
+                .setDateTo(booking.getDateTo())
+                .setPersons(booking.getPersons())
+                .build();
     }
 
     private int getNumberOfPages() throws DaoException {

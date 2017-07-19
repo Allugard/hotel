@@ -83,6 +83,9 @@ public class AddBookingCommand implements Command {
                 .setPersons(Integer.parseInt(request.getParameter(Parameters.PERSONS)))
                 .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter(Parameters.APARTMENTS_TYPE).toUpperCase()))
                 .setStatus(Booking.Status.PROCESSED)
+                .setApartment(new Apartment.Builder()
+                                .setId(Integer.parseInt(request.getParameter(Parameters.FIND)))
+                                .build())
                 .setUser(((User) request.getSession().getAttribute(Parameters.USER)))
                 .build();
     }

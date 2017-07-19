@@ -11,6 +11,10 @@
             <a href="/" class="lnk"><fmt:message key="main.page"/></a>
         </div>
 
+            <div class="col-md-2 menu">
+                <a href="/apartments" class="lnk"><fmt:message key="freeApartments.page"/></a>
+            </div>
+
         <%--           <div class="col-md-2 menu">
                    <form action="/" method="post">
                            <input type="hidden" name="command" value="redirect"/>

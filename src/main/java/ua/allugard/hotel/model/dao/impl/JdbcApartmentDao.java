@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.ApartmentDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
+import ua.allugard.hotel.model.dto.BookingDto;
 import ua.allugard.hotel.model.entity.Apartment;
-import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.util.constants.LogMessage;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
@@ -47,7 +47,7 @@ public class JdbcApartmentDao implements ApartmentDao {
                                                                             "FROM apartments " +
                                                                             "INNER JOIN bookings ON bookings.apartments_id = apartments.id " +
                                                                             "WHERE status = 'confirmed' and (? < bookings.date_to AND  ? > bookings.date_from)) " +
-                                                          "AND apartments.apartments_type = ? and apartments.capacity = ?";
+                                                          "AND apartments.apartments_type = ? and apartments.capacity > ?";
 
 
     JdbcApartmentDao(ConnectionManager connectionManager) {
@@ -163,15 +163,15 @@ public class JdbcApartmentDao implements ApartmentDao {
     }
 
     @Override
-    public List<Apartment> findFreeApartments(Booking booking) throws DaoException {
+    public List<Apartment> findFreeApartments(BookingDto bookingDto) throws DaoException {
         List<Apartment> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement(FIND_FREE_NUMBER)){
-            statement.setDate(1, Date.valueOf(booking.getDateFrom()));
-            statement.setDate(2, Date.valueOf(booking.getDateTo()));
-            statement.setInt(4, booking.getPersons());
-            statement.setString(3, booking.getApartmentsType().toString());
+            statement.setDate(1, Date.valueOf(bookingDto.getDateFrom()));
+            statement.setDate(2, Date.valueOf(bookingDto.getDateTo()));
+            statement.setInt(4, bookingDto.getPersons());
+            statement.setString(3, bookingDto.getApartmentsType().toString());
             ResultSet resultSet = statement.executeQuery();
             result = getApartmentsFromResultSet(resultSet);
         } catch (SQLException e) {

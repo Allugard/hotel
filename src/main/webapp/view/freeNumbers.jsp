@@ -11,12 +11,11 @@
 
 <body>
 <%@include file="/view/header.jsp" %>
-ФЫВЛДФВЫДЖФЫДФЫЭВДЖЫФДВЖФЫЭВД
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form class="register" name="addBookingForm" method="POST" action="/profile/addBooking/find" autocomplete="on">
-    <input type="hidden" name="page" value="addBooking">
+<form class="register" name="addBookingForm" method="POST" action="/apartments/find" autocomplete="on">
+    <input type="hidden" name="page" value="freeNumbers">
     <table align="center">
         <tr>
             <td><fmt:message key="bookings.dateFrom"/>*</td>
@@ -47,7 +46,6 @@
 
     <input type="submit" class="submit-button" value=<fmt:message key="bookings.find"/>>
 </form>
-ХОТЬ ШОТА
     <div class="register">
         <table align="center">
             <tr>
@@ -73,7 +71,6 @@
                 </th>
             </tr>
             <c:forEach items="${freeNumbersForBooking}" var="item">
-
                 <tr>
                     <td>
                         <div class="col-md-2">
@@ -93,19 +90,6 @@
                     <td>
                         <div class="col-md-2">
                             <fmt:message key="${item.apartmentsType.toString()}"></fmt:message>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="col-md-2">
-                            <form action="/profile/addBooking/add" method="post">
-                                <input type="hidden" name="find" value=${item.id}>
-                                <input type="hidden" name="page" value="addBooking">
-                                <input type="hidden" value="${dateTo}" name="dateTo">
-                                <input type="hidden" value="${dateFrom}" name="dateFrom">
-                                <input type="hidden" value="${persons}" name="persons">
-                                <input type="hidden" value="${apartmentsType}" name="apartmentsType">
-                                <button class="submit-button" type="submit"><fmt:message key="bookings.create"/></button>
-                            </form>
                         </div>
                     </td>
                 </tr>

@@ -21,6 +21,7 @@
     </div>
 
 
+
     <%--<form action="/profile/addBooking" method="post">
         <input type="hidden" name="command" value="redirect"/>
         <input type="hidden" name="page" value="addBooking"/>

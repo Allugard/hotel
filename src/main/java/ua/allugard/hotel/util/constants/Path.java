@@ -9,6 +9,8 @@ public interface Path {
     String LOGOUT = "/logout";
     String PROFILE = "/profile";
     String REGISTRATION = "/registration";
+    String APARTMENTS = "/apartments";
+    String FIND = "/apartments/find";
     String SIGN_UP = "/registration/signup";
     String SIGN_IN = "/login/signin";
     String ADD_BOOKING_PAGE = "/profile/addBooking";
@@ -21,4 +23,5 @@ public interface Path {
     String DELETE_APARTMENT = "/profile/apartments/delete";
     String PROCESSED_BOOKINGS = "/profile/processedBookings";
     String BOOKINGS_BY_USER = "/profile/bookings";
+    String FIND_FREE_APARTMENTS = "/profile/addBooking/find";
 }

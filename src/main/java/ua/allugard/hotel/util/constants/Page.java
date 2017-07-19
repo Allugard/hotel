@@ -14,4 +14,5 @@ public interface Page {
     String ADD_APARTMENT = "addApartment";
     String ALL_APARTMENTS = "allApartments";
     String PROCESSED_BOOKINGS = "processedBookings";
+    String APARTMENTS = "freeNumbers";
 }

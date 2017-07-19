@@ -32,6 +32,9 @@ public class CommandFactory {
         commands.put(Path.PROCESSED_BOOKINGS, ProcessedBookingsCommand.getInstance());
         commands.put(Path.UPDATE_BOOKING, UpdateBookingCommand.getInstance());
         commands.put(Path.REGISTRATION, GetRegistrationPageCommand.getInstance());
+        commands.put(Path.FIND_FREE_APARTMENTS, FindFreeApartmentsCommand.getInstance());
+        commands.put(Path.APARTMENTS, GetApartmentsPageCommand.getInstance());
+        commands.put(Path.FIND, FindFreeApartmentsCommand.getInstance());
 
 
 
