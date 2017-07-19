@@ -106,7 +106,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a href="?language=en_US">English</a></li>
-                        <li><a href="?language=uk_UA">Ukrainian</a></li>
+                        <%--<li><a href="?language=uk_UA">Ukrainian</a></li>--%>
                         <li><a href="?language=ru_RU">Russian</a></li>
                     </ul>
                 </div>

@@ -6,7 +6,6 @@
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="registration.page"/></title>
 </head>
 
 <body>

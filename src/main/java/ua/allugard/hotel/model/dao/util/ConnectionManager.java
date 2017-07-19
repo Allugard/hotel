@@ -30,6 +30,12 @@ public class ConnectionManager {
         return Holder.INSTANCE;
     }
 
+    /**
+     * get wrapper of connetion for single query, get wrapper of connection in transaction for multiply query,
+     * before getConnection() in service layer invoked startTransaction(), after commit() or rollbac(), which close connection
+     * @return wrapper of connetction
+     */
+
     public synchronized JdbcConnection getConnection() {
         if(connectionThreadLocal.get() == null) {
             try {

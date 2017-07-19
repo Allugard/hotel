@@ -7,7 +7,6 @@
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="login.page"/></title>
 </head>
 
 <body>
@@ -38,8 +37,8 @@
             <td><fmt:message key="bookings.apartments.type"/>*</td>
             <td>
                 <select name="apartmentsType" required=required>
-                    <option value="Standart" ${apartmentsType == 'standart' ? 'selected' : ''}>Standart</option>
-                    <option value="Suite" ${apartmentsType == 'suite' ? 'selected' : ''}>Suite</option>
+                    <option value="Standart" ${apartmentsType == 'standart' ? 'selected' : ''}> <fmt:message key="standart"></fmt:message></option>
+                    <option value="Suite" ${apartmentsType == 'suite' ? 'selected' : ''}><fmt:message key="suite"></fmt:message></option>
                 </select>
             </td>
         </tr>

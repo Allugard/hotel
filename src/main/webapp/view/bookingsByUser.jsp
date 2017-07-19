@@ -8,7 +8,6 @@
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="login.page"/></title>
 </head>
 
 <body>
@@ -73,12 +72,12 @@
             </th>
             <th>
                 <div class="col-md-2">
-                    <c:out value="${item.apartmentsType}"/>
+                    <fmt:message key="${item.apartmentsType.toString()}"/>
                 </div>
             </th>
             <th>
                 <div class="col-md-2">
-                    <c:out value="${item.status}"/>
+                    <fmt:message key="${item.status.toString()}"/>
                 </div>
             </th>
 

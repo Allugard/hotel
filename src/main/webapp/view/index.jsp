@@ -6,8 +6,6 @@
 <html>
 <head>
     <%@include file="head.jsp" %>
-    <title><fmt:message key="main.page"/></title>
-
 </head>
 
 <body>

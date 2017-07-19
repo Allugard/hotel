@@ -6,8 +6,6 @@
 <html>
 <head>
     <%@include file="head.jsp" %>
-    <title>Title</title>
-
 </head>
 <body>
 <%@include file="header.jsp" %>
