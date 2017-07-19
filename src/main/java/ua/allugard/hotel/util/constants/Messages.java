@@ -1,4 +1,4 @@
-package ua.allugard.hotel.util;
+package ua.allugard.hotel.util.constants;
 
 /**
  * Created by allugard on 08.07.17.
@@ -18,4 +18,5 @@ public interface Messages {
     String INVALID_PRICE = "message.price.invalid";
     String INVALID_NUMBER = "message.number.invalid";
     String INVALID_CAPACITY = "message.capacity.invalid";
+    String INVALID_DATA = "message.number.and.date.invalid";
 }

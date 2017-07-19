@@ -1,6 +1,8 @@
 package ua.allugard.hotel.controller.tag;
 
+import org.apache.log4j.Logger;
 import org.apache.taglibs.standard.tag.common.core.Util;
+import ua.allugard.hotel.controller.FrontController;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
@@ -14,108 +16,89 @@ import java.time.temporal.Temporal;
 /**
  * Created by allugard on 09.07.17.
  */
-public class FormatDateTag extends TagSupport{
+public class FormatDateTag extends TagSupport {
 
-        protected Temporal value;
-        protected String pattern;
-        private String var;
-        private int scope;
+    private static final Logger LOGGER = Logger.getLogger(FormatDateTag.class);
 
 
-        public FormatDateTag()
-        {
-            super ();
-            init ();
-        }
-
-        private void init()
-        {
-
-            this.pattern = this.var = null;
-            this.value = null;
-            this.scope = PageContext.PAGE_SCOPE;
-        }
+    protected Temporal value;
+    protected String pattern;
+    private String var;
+    private int scope;
 
 
-        public void setVar(final String var)
-        {
-            this.var = var;
-        }
+    public FormatDateTag() {
+        super();
+        init();
+    }
 
-        public void setScope(final String scope)
-        {
-            this.scope = Util.getScope (scope);
-        }
+    private void init() {
 
-
-        public void setValue(final Temporal value)
-        {
-            this.value = value;
-        }
+        this.pattern = this.var = null;
+        this.value = null;
+        this.scope = PageContext.PAGE_SCOPE;
+    }
 
 
-        public void setPattern(final String pattern)
-        {
-            this.pattern = pattern;
-        }
+    public void setVar(final String var) {
+        this.var = var;
+    }
+
+    public void setScope(final String scope) {
+        this.scope = Util.getScope(scope);
+    }
 
 
-        @Override
-        public int doEndTag() throws JspException
-        {
+    public void setValue(final Temporal value) {
+        this.value = value;
+    }
 
-            String formatted = null;
 
-            if (this.value == null)
-            {
-                if (this.var != null)
-                {
-                    this.pageContext.removeAttribute (this.var, this.scope);
-                }
-                return EVAL_PAGE;
+    public void setPattern(final String pattern) {
+        this.pattern = pattern;
+    }
+
+
+    @Override
+    public int doEndTag() throws JspException {
+
+        String formatted = null;
+
+        if (this.value == null) {
+            if (this.var != null) {
+                this.pageContext.removeAttribute(this.var, this.scope);
             }
-
-            // Create formatter
-            if (this.pattern != null)
-            {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern (this.pattern);
-                formatted = formatter.format (this.value);
-            }
-            else
-            {
-                // no formatting locale available, use Date.toString()
-                formatted = this.value.toString ();
-            }
-
-            if (this.var != null)
-            {
-                this.pageContext.setAttribute (this.var, formatted, this.scope);
-            }
-            else
-            {
-                try
-                {
-                    this.pageContext.getOut ().print (formatted);
-                }
-                catch (final IOException ioe)
-                {
-                    try {
-                        throw new JspTagException(ioe.toString (), ioe);
-                    } catch (JspTagException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
             return EVAL_PAGE;
         }
 
-
-        @Override
-        public void release()
-        {
-            init ();
+        if (this.pattern != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(this.pattern);
+            formatted = formatter.format(this.value);
+        } else {
+            formatted = this.value.toString();
         }
 
+        if (this.var != null) {
+            this.pageContext.setAttribute(this.var, formatted, this.scope);
+        } else {
+            try {
+                this.pageContext.getOut().print(formatted);
+            } catch (final IOException ioe) {
+                try {
+                    throw new JspTagException(ioe.toString(), ioe);
+                } catch (JspTagException e) {
+                    LOGGER.error(e);
+                }
+            }
+        }
+        return EVAL_PAGE;
     }
+
+
+    @Override
+    public void release() {
+        init();
+    }
+
+}
 

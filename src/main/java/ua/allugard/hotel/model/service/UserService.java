@@ -30,22 +30,7 @@ public class UserService {
     }
 
 
-
-    boolean update(User user){
-        boolean updated = false;
-        try {
-            connectionManager.startTransaction();
-            updated = daoFactory.getUserDao().update(user);
-            updated = daoFactory.getUserAuthenticationDao().update(user.getUserAuthentication());
-            connectionManager.commit();
-        }catch (Exception e){
-            connectionManager.rollback();
-        }
-        return updated;
-    }
-
-
-    public Optional<User> findUserByLoginPassword(String login, String password){
+    public Optional<User> findUserByLoginPassword(String login, String password) throws DaoException {
         Optional<User> user = Optional.empty();
         Optional<UserAuthentication> userAuthentication;
         userAuthentication = daoFactory.getUserAuthenticationDao().findUserByLogin(login);
@@ -57,11 +42,16 @@ public class UserService {
     }
 
     public boolean create(User user) throws DaoException {
-        boolean created;
-        connectionManager.startTransaction();
-        daoFactory.getUserAuthenticationDao().create(user.getUserAuthentication());
-        created = daoFactory.getUserDao().create(user);
-        connectionManager.commit();
+        boolean created = false;
+        try {
+            connectionManager.startTransaction();
+            daoFactory.getUserAuthenticationDao().create(user.getUserAuthentication());
+            created = daoFactory.getUserDao().create(user);
+            connectionManager.commit();
+        } catch (DaoException e){
+            connectionManager.rollback();
+            throw e;
+        }
         return created;
     }
 

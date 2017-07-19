@@ -1,4 +1,4 @@
-package ua.allugard.hotel.util;
+package ua.allugard.hotel.util.constants;
 
 /**
  * Created by allugard on 08.07.17.

@@ -1,26 +1,28 @@
 package ua.allugard.hotel.controller;
 
+import org.apache.log4j.Logger;
 import ua.allugard.hotel.controller.command.Command;
 import ua.allugard.hotel.controller.command.CommandFactory;
-import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.model.dao.impl.JdbcApartmentDao;
+import ua.allugard.hotel.util.constants.LogMessage;
+import ua.allugard.hotel.util.constants.Messages;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.Resolver;
 import ua.allugard.hotel.util.exceptions.DaoException;
-import ua.allugard.hotel.util.exceptions.DuplicateLoginException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 /**
  * Created by allugard on 05.07.17.
  */
 public class FrontController extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(FrontController.class);
     private CommandFactory commandFactory;
 
     public FrontController() {
@@ -39,7 +41,7 @@ public class FrontController extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page = executeCommand(request, response);
-        String path = "/view/"+page+".jsp";
+        String path = Resolver.resolve(page);
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(path);
         dispatcher.forward(request, response);
     }
@@ -52,8 +54,10 @@ public class FrontController extends HttpServlet {
             page = command.execute(request, response);
         } catch (DaoException e) {
             page = Page.ERROR;
+            LOGGER.error(LogMessage.ERROR_IN_DAO_LAYER + e);
         } catch (Exception e){
-            e.printStackTrace();
+            page = Page.ERROR;
+            LOGGER.error(e);
         }
 
         return page;

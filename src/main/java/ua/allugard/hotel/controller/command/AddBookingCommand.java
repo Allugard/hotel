@@ -4,15 +4,14 @@ import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.BookingService;
-import ua.allugard.hotel.util.Messages;
-import ua.allugard.hotel.util.Page;
-import ua.allugard.hotel.util.Parameters;
+import ua.allugard.hotel.util.constants.Messages;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.constants.Parameters;
 import ua.allugard.hotel.util.Validator;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

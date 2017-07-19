@@ -6,11 +6,10 @@ import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
-import ua.allugard.hotel.util.LogMessage;
+import ua.allugard.hotel.util.constants.LogMessage;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +46,7 @@ public class JdbcApartmentDao implements ApartmentDao {
                                                                             "SELECT bookings.apartments_id " +
                                                                             "FROM apartments " +
                                                                             "INNER JOIN bookings ON bookings.apartments_id = apartments.id " +
-                                                                            "WHERE status = 'confirmed' and (? > bookings.date_to OR  ? < bookings.date_from)) " +
+                                                                            "WHERE status = 'confirmed' and (? < bookings.date_to AND  ? > bookings.date_from)) " +
                                                           "AND apartments.apartments_type = ? and apartments.capacity = ?";
 
 
@@ -64,7 +63,7 @@ public class JdbcApartmentDao implements ApartmentDao {
     }
 
     @Override
-    public Optional<Apartment> find(int id) {
+    public Optional<Apartment> find(int id) throws DaoException {
         Optional<Apartment> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -74,6 +73,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             result = getApartmentFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
@@ -102,7 +102,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             statement.setInt(COLUMN_CAPACITY_INDEX, apartment.getCapacity());
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, apartment.getApartmentsType().toString());
             statement.setInt(COLUMN_PRICE_INDEX, apartment.getPrice());
-            statement.setString(COLUMN_NUMBER_INDEX, apartment.getNumber());
+            statement.setInt(COLUMN_NUMBER_INDEX, apartment.getNumber());
             insertedRow = statement.executeUpdate();
             apartment.setId(generateId(statement));
         } catch (SQLException e) {
@@ -113,7 +113,7 @@ public class JdbcApartmentDao implements ApartmentDao {
     }
 
     @Override
-    public boolean update(Apartment apartment) {
+    public boolean update(Apartment apartment) throws DaoException {
         int updatedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -121,17 +121,18 @@ public class JdbcApartmentDao implements ApartmentDao {
             statement.setInt(COLUMN_CAPACITY_INDEX, apartment.getCapacity());
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, apartment.getApartmentsType().toString());
             statement.setInt(COLUMN_PRICE_INDEX, apartment.getPrice());
-            statement.setString(COLUMN_NUMBER_INDEX, apartment.getNumber());
+            statement.setInt(COLUMN_NUMBER_INDEX, apartment.getNumber());
             statement.setInt(COLUMN_ID_INDEX, apartment.getId());
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.UPDATE + e.getMessage());
+            throw new DaoException();
         }
         return updatedRow > 0;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws DaoException {
         int deletedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -140,12 +141,13 @@ public class JdbcApartmentDao implements ApartmentDao {
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.DELETE + e.getMessage());
+            throw new DaoException();
         }
         return deletedRow > 0;
     }
 
     @Override
-    public Optional<Apartment> findByNumber(String number) {
+    public Optional<Apartment> findByNumber(String number) throws DaoException {
         Optional<Apartment> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -155,12 +157,13 @@ public class JdbcApartmentDao implements ApartmentDao {
             result = getApartmentFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND_BY_NUMBER + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public List<Apartment> findFreeApartments(Booking booking) {
+    public List<Apartment> findFreeApartments(Booking booking) throws DaoException {
         List<Apartment> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -173,6 +176,7 @@ public class JdbcApartmentDao implements ApartmentDao {
             result = getApartmentsFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND_FREE_NUMBER + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
@@ -201,7 +205,7 @@ public class JdbcApartmentDao implements ApartmentDao {
         return new Apartment.Builder()
                 .setId(resultSet.getInt(COLUMN_ID))
                 .setCapacity(resultSet.getInt(COLUMN_CAPACITY))
-                .setNumber(resultSet.getString(COLUMN_NUMBER))
+                .setNumber(resultSet.getInt(COLUMN_NUMBER))
                 .setApartmentsType(Apartment.ApartmentsType.valueOf(resultSet.getString(COLUMN_APARTMENTS_TYPE).toUpperCase()))
                 .setPrice(resultSet.getInt(COLUMN_PRICE))
                 .build();

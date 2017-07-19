@@ -5,7 +5,8 @@ import ua.allugard.hotel.model.dao.UserDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.User;
-import ua.allugard.hotel.util.LogMessage;
+import ua.allugard.hotel.util.constants.LogMessage;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public Optional<User> find(int id) {
+    public Optional<User> find(int id) throws DaoException {
         Optional<User> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -61,12 +62,14 @@ public class JdbcUserDao implements UserDao {
             result = getUserFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND + e.getMessage());
+            throw new DaoException();
+
         }
         return result;
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws DaoException {
         List<User> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -75,12 +78,13 @@ public class JdbcUserDao implements UserDao {
             result = getUsersFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public boolean create(User user) {
+    public boolean create(User user) throws DaoException {
         int insertedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -92,12 +96,13 @@ public class JdbcUserDao implements UserDao {
             insertedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.CREATE + e.getMessage());
+            throw new DaoException();
         }
         return insertedRow > 0;
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean update(User user) throws DaoException {
         int updatedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -110,12 +115,13 @@ public class JdbcUserDao implements UserDao {
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.UPDATE + e.getMessage());
+            throw new DaoException();
         }
         return updatedRow > 0;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws DaoException {
         int deletedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -124,12 +130,13 @@ public class JdbcUserDao implements UserDao {
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.DELETE + e.getMessage());
+            throw new DaoException();
         }
         return deletedRow > 0;
     }
 
     @Override
-    public List<User> findUserByFullName(String firstName, String lastName) {
+    public List<User> findUserByFullName(String firstName, String lastName) throws DaoException {
         List<User> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -140,6 +147,7 @@ public class JdbcUserDao implements UserDao {
             result = getUsersFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND_BY_FULL_NAME + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }

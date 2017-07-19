@@ -9,7 +9,7 @@ public class Apartment {
     private int id;
     private int capacity;
     private int price;
-    private String number;
+    private int number;
     private ApartmentsType apartmentsType;
 
     public enum ApartmentsType {
@@ -26,7 +26,7 @@ public class Apartment {
         private int id;
         private int capacity;
         private int price;
-        private String number;
+        private int number;
         private ApartmentsType apartmentsType;
 
         public Builder setId(int id) {
@@ -44,7 +44,7 @@ public class Apartment {
             return this;
         }
 
-        public Builder setNumber(String number) {
+        public Builder setNumber(int number) {
             this.number = number;
             return this;
         }
@@ -89,11 +89,11 @@ public class Apartment {
         this.price = price;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
@@ -110,13 +110,13 @@ public class Apartment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Apartment that = (Apartment) o;
+        Apartment apartment = (Apartment) o;
 
-        if (id != that.id) return false;
-        if (capacity != that.capacity) return false;
-        if (price != that.price) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
-        return apartmentsType == that.apartmentsType;
+        if (id != apartment.id) return false;
+        if (capacity != apartment.capacity) return false;
+        if (price != apartment.price) return false;
+        if (number != apartment.number) return false;
+        return apartmentsType == apartment.apartmentsType;
     }
 
     @Override
@@ -124,8 +124,19 @@ public class Apartment {
         int result = id;
         result = 31 * result + capacity;
         result = 31 * result + price;
-        result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + number;
         result = 31 * result + (apartmentsType != null ? apartmentsType.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Apartment{" +
+                "id=" + id +
+                ", capacity=" + capacity +
+                ", price=" + price +
+                ", number='" + number + '\'' +
+                ", apartmentsType=" + apartmentsType +
+                '}';
     }
 }

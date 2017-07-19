@@ -2,16 +2,15 @@ package ua.allugard.hotel.controller.command;
 
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.UserService;
-import ua.allugard.hotel.util.Messages;
-import ua.allugard.hotel.util.Page;
-import ua.allugard.hotel.util.Parameters;
+import ua.allugard.hotel.util.Hasher;
+import ua.allugard.hotel.util.constants.Messages;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.constants.Parameters;
 import ua.allugard.hotel.util.Validator;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +35,9 @@ public class SignInCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws DaoException {
         String login = request.getParameter(Parameters.LOGIN);
-        String password = request.getParameter(Parameters.PASSWORD);
+        String password = Hasher.hashCode(request.getParameter(Parameters.PASSWORD));
 
         List<String> errors = validate(login, password);
         if (!errors.isEmpty()){
@@ -67,12 +66,12 @@ public class SignInCommand implements Command {
 
         Validator validator = Validator.getInstance();
 
-//        if(!validator.validateLogin(login)){
-//            errors.add(Messages.INVALID_LOGIN);
-//        }
-//        if(!validator.validatePassword(password)){
-//            errors.add(Messages.INVALID_PASSWORD);
-//        }
+        if(!validator.validateLogin(login)){
+            errors.add(Messages.INVALID_LOGIN);
+        }
+        if(!validator.validatePassword(password)){
+            errors.add(Messages.INVALID_PASSWORD);
+        }
         return errors;
     }
 

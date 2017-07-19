@@ -65,5 +65,11 @@ public class Bill {
         return result;
     }
 
-
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "id=" + id +
+                ", price=" + price +
+                '}';
+    }
 }

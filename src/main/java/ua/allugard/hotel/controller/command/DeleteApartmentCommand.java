@@ -1,8 +1,8 @@
 package ua.allugard.hotel.controller.command;
 
 import ua.allugard.hotel.model.service.ApartmentService;
-import ua.allugard.hotel.model.service.BookingService;
-import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ public class DeleteApartmentCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws DaoException {
         int id = Integer.parseInt(request.getParameter("delete"));
         apartmentService.delete(id);
         return Page.ALL_APARTMENTS;

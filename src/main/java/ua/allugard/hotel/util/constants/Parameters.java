@@ -1,4 +1,4 @@
-package ua.allugard.hotel.util;
+package ua.allugard.hotel.util.constants;
 
 /**
  * Created by allugard on 16.07.17.
@@ -24,4 +24,8 @@ public interface Parameters {
     String PAGE = "page";
     String ID = "id";
     String STATUS = "status";
+    String BOOKINGS = "bookings";
+    String FREE_NUMBERS = "freeNumbersForBooking";
+    String NUMBER_OF_PAGES = "noOfPages";
+    String CURRENT_PAGE = "currentPage";
 }

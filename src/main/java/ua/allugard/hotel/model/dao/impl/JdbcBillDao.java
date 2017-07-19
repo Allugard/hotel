@@ -5,7 +5,9 @@ import ua.allugard.hotel.model.dao.BillDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Bill;
-import ua.allugard.hotel.util.LogMessage;
+import ua.allugard.hotel.model.entity.Booking;
+import ua.allugard.hotel.util.constants.LogMessage;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class JdbcBillDao implements BillDao {
 
     private static final String FIND_ALL = "SELECT * FROM bills";
     private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
+    private static final String FIND_BY_BOOKING = FIND_ALL + " INNER JOIN bookings ON bills.id = bookings.bills_id " +
+                                                                " WHERE bookings.id = ?";
 
     JdbcBillDao(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -47,8 +51,26 @@ public class JdbcBillDao implements BillDao {
 
 
     @Override
-    public Optional<Bill> find(int id) {
-        Optional<Bill> result = null;
+    public Optional<Bill> findByBooking(Booking booking) throws DaoException {
+        Optional<Bill> result = Optional.empty();
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BY_BOOKING)){
+            statement.setInt(1, booking.getId());
+            ResultSet resultSet = statement.executeQuery();
+            result = getBillFromResultSet(resultSet);
+        } catch (SQLException e) {
+            LOGGER.info(JdbcBillDao.class.toString() + LogMessage.FIND_BY_BOOKING + e.getMessage());
+            throw new DaoException();
+        }
+        return result;
+    }
+
+
+
+    @Override
+    public Optional<Bill> find(int id) throws DaoException {
+        Optional<Bill> result = Optional.empty();
         try (JdbcConnection connection = connectionManager.getConnection();
         PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_ID)){
@@ -57,12 +79,13 @@ public class JdbcBillDao implements BillDao {
             result = getBillFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBillDao.class.toString() + LogMessage.FIND + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public List<Bill> findAll() {
+    public List<Bill> findAll() throws DaoException {
         List<Bill> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -71,12 +94,13 @@ public class JdbcBillDao implements BillDao {
             result = getBillsFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBillDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public boolean create(Bill bill) {
+    public boolean create(Bill bill) throws DaoException {
         int insertedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -84,15 +108,16 @@ public class JdbcBillDao implements BillDao {
                              Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(COLUMN_PRICE_INDEX, bill.getPrice());
             insertedRow = statement.executeUpdate();
-            bill.setId(statement.getGeneratedKeys().getInt(1));
+            bill.setId(generateId(statement));
         } catch (SQLException e) {
             LOGGER.info(JdbcBillDao.class.toString() + LogMessage.CREATE + e.getMessage());
+            throw new DaoException();
         }
         return insertedRow > 0;
     }
 
     @Override
-    public boolean update(Bill bill) {
+    public boolean update(Bill bill) throws DaoException {
         int updatedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -102,12 +127,13 @@ public class JdbcBillDao implements BillDao {
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcBillDao.class.toString() + LogMessage.UPDATE + e.getMessage());
+            throw new DaoException();
         }
         return updatedRow > 0;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws DaoException {
         int deletedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -116,6 +142,7 @@ public class JdbcBillDao implements BillDao {
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcBillDao.class.toString() + LogMessage.DELETE + e.getMessage());
+            throw new DaoException();
         }
         return deletedRow > 0;
     }

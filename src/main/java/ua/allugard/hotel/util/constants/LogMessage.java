@@ -1,4 +1,4 @@
-package ua.allugard.hotel.util;
+package ua.allugard.hotel.util.constants;
 
 /**
  * Created by allugard on 11.07.17.
@@ -23,4 +23,6 @@ public interface LogMessage {
     String FIND_BOOKING_BY_USER = "Find booking by user";
     String FIND_PROCESSED_BOOKINGS_IN_SERVICE_LAYER = "Find processed bookings";
     String GET_NUMBER_OF_PAGES_FOR_PROCESSED_BOOKINGS = "getNumberOfPagesForProcessedBookings()";
+    String FIND_BY_BOOKING = "findByBooking()";
+    String ERROR_IN_DAO_LAYER = "error in dao layer";
 }

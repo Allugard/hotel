@@ -12,11 +12,11 @@ import java.util.Optional;
  * Created by allugard on 30.06.17.
  */
 public interface GenericDao<T> {
-    Optional<T> find(int id);
-    List<T> findAll();
+    Optional<T> find(int id) throws DaoException;
+    List<T> findAll() throws DaoException;
     boolean create(T t) throws DaoException;
-    boolean update(T t);
-    boolean delete(int id);
+    boolean update(T t) throws DaoException;
+    boolean delete(int id) throws DaoException;
 
     default int generateId(PreparedStatement statement) throws SQLException {
         int id = -1;

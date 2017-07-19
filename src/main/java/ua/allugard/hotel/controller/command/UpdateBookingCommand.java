@@ -2,26 +2,24 @@ package ua.allugard.hotel.controller.command;
 
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
-import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.BookingService;
-import ua.allugard.hotel.util.Page;
-import ua.allugard.hotel.util.Parameters;
+import ua.allugard.hotel.util.constants.Messages;
+import ua.allugard.hotel.util.constants.Parameters;
+import ua.allugard.hotel.util.Validator;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by allugard on 08.07.17.
  */
 public class UpdateBookingCommand implements Command {
 
+    private static final java.lang.String SPACE = " ";
     private BookingService bookingService;
 
     UpdateBookingCommand(BookingService bookingService) {
@@ -37,29 +35,35 @@ public class UpdateBookingCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
-//        Booking s = ((Booking) request.getAttribute("update"));
-//        System.out.println("ТАКОЙ ИТЕМ" + s);
-//        Optional<Booking> booking = bookingService.find(Integer.parseInt(request.getParameter("update")));
-
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws DaoException {
         List<Booking> bookings = createBookingsFromRequest(request);
 
-        System.out.println(bookings);
-//        bookingService.update(booking);
-//        System.out.println("UPDAAAAAAAAAAAAAGE");
-//        System.out.println(request.getParameter("update"));
-//        System.out.println(Arrays.toString(request.getParameterValues("update")));
-//        booking.get().setStatus(Booking.Status.REJECTED);
+        List<String> errors = validate(bookings);
 
-//        bookingService.update(booking.get());
+        if(!errors.isEmpty()){
+            setErrorsToRequest(request, errors);
+            return ProcessedBookingsCommand.getInstance().execute(request, response);
+        }
 
-//        try {
-//            booking = createBookingFromRequest(request);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        bookingService.create(booking);
+        bookingService.update(bookings);
+
         return ProcessedBookingsCommand.getInstance().execute(request, response);
+    }
+
+    private List<String> validate(List<Booking> bookings) {
+        List<String> errors = new ArrayList<>();
+
+        Validator validator = Validator.getInstance();
+
+        if(!validator.validateNumberAndDateUpdatedBookings(bookings)){
+            errors.add(Messages.INVALID_DATA);
+        }
+
+        return errors;
+    }
+
+    private void setErrorsToRequest(HttpServletRequest request, List<String> errors) {
+        request.setAttribute(Parameters.ERRORS, errors);
     }
 
     private List<Booking> createBookingsFromRequest(HttpServletRequest request) {
@@ -76,33 +80,16 @@ public class UpdateBookingCommand implements Command {
             if(request.getParameterValues(Parameters.STATUS)[i].equals(Booking.Status.REJECTED.toString())){
                 booking.setStatus(Booking.Status.REJECTED);
             } else {
-                System.out.println(request.getParameterValues(Parameters.STATUS)[i]);
+                String [] apartmentParameters = request.getParameterValues(Parameters.STATUS)[i].split(SPACE);
                 booking.setStatus(Booking.Status.CONFIRMED);
                 booking.setApartment(new Apartment.Builder()
-                        .setId(Integer.parseInt(request.getParameterValues(Parameters.STATUS)[i]))
+                        .setId(Integer.parseInt(apartmentParameters[0]))
+                        .setPrice(Integer.parseInt(apartmentParameters[1]))
                         .build());
             }
-            System.out.println(booking);
             bookings.add(booking);
+//            System.out.println(booking);
         }
-/*        Booking booking = new Booking.Builder()
-                .setId(Integer.parseInt(request.getParameter(Parameters.ID)))
-                .setDateFrom(LocalDate.parse(request.getParameter(Parameters.DATE_FROM)))
-                .setDateTo(LocalDate.parse(request.getParameter(Parameters.DATE_TO)))
-                .setPersons(Integer.parseInt(request.getParameter(Parameters.PERSONS)))
-                .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter(Parameters.APARTMENTS_TYPE).toUpperCase()))
-                .setStatus(Booking.Status.PROCESSED)
-                .setUser(((User) request.getSession().getAttribute(Parameters.USER)))
-                .build();
-
-        if(request.getParameter(Parameters.STATUS).equals(Booking.Status.REJECTED.toString())){
-            booking.setStatus(Booking.Status.REJECTED);
-        } else {
-            booking.setStatus(Booking.Status.CONFIRMED);
-            booking.setApartment(new Apartment.Builder()
-                    .setId(Integer.parseInt(request.getParameter(Parameters.STATUS)))
-                    .build());
-        }*/
 
         return bookings;
     }

@@ -1,23 +1,15 @@
 package ua.allugard.hotel.controller.command;
 
-import ua.allugard.hotel.model.dao.util.ConnectionManager;
-import ua.allugard.hotel.model.dao.util.DaoFactory;
 import ua.allugard.hotel.model.entity.Apartment;
-import ua.allugard.hotel.model.entity.Booking;
-import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.service.ApartmentService;
-import ua.allugard.hotel.model.service.BillService;
-import ua.allugard.hotel.model.service.BookingService;
-import ua.allugard.hotel.util.Messages;
-import ua.allugard.hotel.util.Page;
-import ua.allugard.hotel.util.Parameters;
+import ua.allugard.hotel.util.constants.Messages;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.constants.Parameters;
 import ua.allugard.hotel.util.Validator;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +81,7 @@ public class AddApartmentCommand implements Command {
                 .setPrice(Integer.parseInt(request.getParameter(Parameters.PRICE)))
                 .setCapacity(Integer.parseInt(request.getParameter(Parameters.CAPACITY)))
                 .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameter(Parameters.APARTMENTS_TYPE).toUpperCase()))
-                .setNumber(request.getParameter(Parameters.NUMBER))
+                .setNumber(Integer.parseInt(request.getParameter(Parameters.NUMBER)))
                 .build();
     }
 

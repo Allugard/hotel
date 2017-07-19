@@ -2,8 +2,8 @@ package ua.allugard.hotel.controller.command;
 
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.service.ApartmentService;
-import ua.allugard.hotel.model.service.BookingService;
-import ua.allugard.hotel.util.Page;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public class AllApartmentsCommand implements Command{
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws DaoException {
         List<Apartment> apartments;
         apartments = apartmentService.findAll();
         request.setAttribute("apartments", apartments);

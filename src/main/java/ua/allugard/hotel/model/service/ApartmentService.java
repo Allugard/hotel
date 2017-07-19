@@ -31,7 +31,7 @@ public class ApartmentService {
         return Holder.INSTANCE;
     }
 
-    public Optional<Apartment> find(int id){
+    public Optional<Apartment> find(int id) throws DaoException {
         Optional<Apartment> apartment;
         apartment = daoFactory.getApartmentDao().find(id);
         return apartment;
@@ -39,13 +39,13 @@ public class ApartmentService {
 /*
     LocalDate dateFrom, LocalDate dateTo, int capacity, Apartment.ApartmentsType apartmentsType
 */
-    public List<Apartment> findFreeApartments(Booking booking){
+    public List<Apartment> findFreeApartments(Booking booking) throws DaoException {
         List<Apartment> apartment;
         apartment = daoFactory.getApartmentDao().findFreeApartments(booking);
         return apartment;
     }
 
-    public List<Apartment> findAll(){
+    public List<Apartment> findAll() throws DaoException {
         List<Apartment> apartment;
         apartment = daoFactory.getApartmentDao().findAll();
         return apartment;
@@ -58,7 +58,7 @@ public class ApartmentService {
         return created;
     }
 
-    public boolean delete(int id){
+    public boolean delete(int id) throws DaoException {
         boolean deleted;
         deleted = daoFactory.getApartmentDao().delete(id);
         return deleted;

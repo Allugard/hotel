@@ -3,9 +3,10 @@ package ua.allugard.hotel.controller.command;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.model.entity.UserAuthentication;
 import ua.allugard.hotel.model.service.UserService;
-import ua.allugard.hotel.util.Messages;
-import ua.allugard.hotel.util.Page;
-import ua.allugard.hotel.util.Parameters;
+import ua.allugard.hotel.util.Hasher;
+import ua.allugard.hotel.util.constants.Messages;
+import ua.allugard.hotel.util.constants.Page;
+import ua.allugard.hotel.util.constants.Parameters;
 import ua.allugard.hotel.util.Validator;
 import ua.allugard.hotel.util.exceptions.DaoException;
 import ua.allugard.hotel.util.exceptions.DuplicateLoginException;
@@ -116,7 +117,7 @@ public class SignUpCommand implements Command {
                 .setFirstName(request.getParameter(Parameters.FIRST_NAME))
                 .setUserAuthentication(new UserAuthentication.Builder()
                         .setLogin(request.getParameter(Parameters.LOGIN))
-                        .setPassword(request.getParameter(Parameters.PASSWORD))
+                        .setPassword(Hasher.hashCode(request.getParameter(Parameters.PASSWORD)))
                         .setRole(UserAuthentication.Role.CLIENT)
                         .build())
                 .build();

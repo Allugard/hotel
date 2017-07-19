@@ -6,7 +6,8 @@ import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Booking;
-import ua.allugard.hotel.util.LogMessage;
+import ua.allugard.hotel.util.constants.LogMessage;
+import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class JdbcBookingDao implements BookingDao {
 
     private static final String FIND_ALL = "SELECT bookings.* FROM bookings ";
     private static final String FIND_BY_ID = FIND_ALL + "WHERE id = ?";
-    private static final String FIND_BY_USER = FIND_ALL + "INNER JOIN users ON bookings.users_id = users.id";
+    private static final String FIND_BY_USER = FIND_ALL + "INNER JOIN users ON bookings.users_id = users.id WHERE users.id = ?";
     private static final String FIND_PROCESSED = FIND_ALL + "WHERE status = \"processed\"";
     private static final String LIMIT = "LIMIT ?,? ";
 
@@ -61,7 +62,7 @@ public class JdbcBookingDao implements BookingDao {
     }
 
     @Override
-    public Optional<Booking> find(int id) {
+    public Optional<Booking> find(int id) throws DaoException {
         Optional<Booking> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -71,12 +72,13 @@ public class JdbcBookingDao implements BookingDao {
             result = getBookingFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public List<Booking> findAll() {
+    public List<Booking> findAll() throws DaoException {
         List<Booking> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -85,12 +87,13 @@ public class JdbcBookingDao implements BookingDao {
             result = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_ALL + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public boolean create(Booking booking) {
+    public boolean create(Booking booking) throws DaoException {
         int insertedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -106,13 +109,14 @@ public class JdbcBookingDao implements BookingDao {
             booking.setId(generateId(statement));
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.CREATE + e.getMessage());
+            throw new DaoException();
         }
         return insertedRow > 0;
 
     }
 
     @Override
-    public boolean update(Booking booking) {
+    public boolean update(Booking booking) throws DaoException {
         int updatedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -138,13 +142,14 @@ public class JdbcBookingDao implements BookingDao {
             updatedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.UPDATE + e.getMessage());
+            throw new DaoException();
         }
         return updatedRow > 0;
 
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws DaoException {
         int deletedRow = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -153,26 +158,30 @@ public class JdbcBookingDao implements BookingDao {
             deletedRow = statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.DELETE + e.getMessage());
+            throw new DaoException();
         }
         return deletedRow > 0;
     }
 
     @Override
-    public List<Booking> findByUser(int userId) {
+    public List<Booking> findByUser(int userId) throws DaoException {
         List<Booking> result = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement(FIND_BY_USER)){
+            statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
             result = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
+            e.printStackTrace();
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_BY_USER + e.getMessage());
+            throw new DaoException();
         }
         return result;
     }
 
     @Override
-    public List<Booking> findProcessedBooking(int firstRecord, int recordsPerPage) {
+    public List<Booking> findProcessedBooking(int firstRecord, int recordsPerPage) throws DaoException {
         List<Booking> results = null;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -183,12 +192,13 @@ public class JdbcBookingDao implements BookingDao {
             results = getBookingsFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.FIND_PROCESSED_BOOKINGS + e.getMessage());
+            throw new DaoException();
         }
         return results;
     }
 
     @Override
-    public int getNumberOfPagesForProcessedBookings() {
+    public int getNumberOfPagesForProcessedBookings() throws DaoException {
         int results = 0;
         try (JdbcConnection connection = connectionManager.getConnection();
              PreparedStatement statement =
@@ -199,6 +209,7 @@ public class JdbcBookingDao implements BookingDao {
             results = getRowCount(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcBookingDao.class.toString() + LogMessage.GET_NUMBER_OF_PAGES_FOR_PROCESSED_BOOKINGS + e.getMessage());
+            throw new DaoException();
         }
         return results;
     }
