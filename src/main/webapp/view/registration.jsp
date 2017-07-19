@@ -1,50 +1,50 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-
 
 
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="registration.page"/> </title>
+    <title><fmt:message key="registration.page"/></title>
 </head>
 
 <body>
 <%@include file="/view/header.jsp" %>
 
-<form method="POST" action="/signup" autocomplete="on">
-    <input type="hidden" name="command" value="signup"/>
+<form class="register" method="POST" action="/registration/signup" autocomplete="on">
     <div>
-        <span><fmt:message key="email"/><label>*</label></span>
-        <input type="text" name="login" value="${login}" required="required">
+        <span><i class="fa fa-envelope-o" aria-hidden="true"></i>*</span>
+        <input type="text" placeholder="example@mail.com" name="login" value="${login}" required="required">
     </div>
     <div>
-        <span><fmt:message key="password"/><label>*</label></span>
-        <input type="password" name="password"  required="required" >
-    </div>
-
-
-    <div>
-        <span><fmt:message key="registration.frist.name"/><label>*</label></span>
-        <input type="text" name="firstName" value="${firstName}" required="required">
-    </div>
-    <div>
-        <span><fmt:message key="registration.last.name"/><label>*</label></span>
-        <input type="text" name="lastName" value="${lastName}" required="required">
+        <span><i class="fa fa-unlock-alt" aria-hidden="true"></i>*</span>
+        <input type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" name="password"
+               required="required">
     </div>
 
+
     <div>
-        <span><fmt:message key="registration.phone"/><label>*</label></span>
-        <input type="text" name="phone" value="${phone}" required="required">
+        <span><i class="fa fa-caret-right" aria-hidden="true"></i>*</span>
+        <input type="text" placeholder="<fmt:message key="registration.frist.name"/>" name="firstName"
+               value="${firstName}" required="required">
+    </div>
+    <div>
+        <span><i class="fa fa-caret-right" aria-hidden="true"></i>*</span>
+        <input type="text" placeholder="<fmt:message key="registration.last.name"/>" name="lastName" value="${lastName}"
+               required="required">
     </div>
 
-    <input type="submit" value=<fmt:message key="sign.up"/>>
+    <div>
+        <span><i class="fa fa-mobile" aria-hidden="true"></i>*</span>
+        <input type="text" placeholder="+380_ _ _ _ _ _ _ _" name="phone" value="${phone}" required="required">
+    </div>
+
+    <input class="submit-button" type="submit" value=<fmt:message key="sign.up"/>>
 </form>
 
 <c:forEach items="${errors}" var="item">
-    <fmt:message key="${item}"/>
+    <p class="text-danger"><fmt:message key="${item}"/></p>
     <br>
 </c:forEach>
 

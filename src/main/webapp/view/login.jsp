@@ -1,43 +1,34 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-
 
 
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="login.page"/> </title>
+    <title><fmt:message key="login.page"/></title>
 </head>
 
 <body>
 <%@include file="/view/header.jsp" %>
-
-<%
-    request.setCharacterEncoding("UTF-8");
-%>
-
-ПРИВЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕТ
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form method="POST" action="/login/signin" autocomplete="on">
-    <input type="hidden" name="command" value="signin"/>
-    <div>
-        <span><fmt:message key="email"/><label>*</label></span>
-        <input type="text" name="login" value="${login}" required="required">
-    </div>
-    <div>
-        <span><fmt:message key="password"/><label>*</label></span>
-        <input name="password" required="required" type="password">
-    </div>
 
-    <input type="submit" value=<fmt:message key="sign.in"/>>
+
+<form class="register" method="POST" action="/login/signin" autocomplete="on">
+    <span class="text-primary"><i class="fa fa-envelope-o" aria-hidden="true"></i>*</span>
+    <input type="text" name="login" placeholder="example@mail.com" value="${login}" required="required">
+    <br>
+    <span class="text-primary"><i class="fa fa-unlock-alt" aria-hidden="true"></i>*</span>
+    <input name="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required="required"
+           type="password">
+    <br>
+    <input class="submit-button" type="submit" value=<fmt:message key="sign.in"/>>
 </form>
 
 <c:forEach items="${errors}" var="item">
-    <fmt:message key="${item}"/>
+    <p class="text-danger"><fmt:message key="${item}"/></p>
     <br>
 </c:forEach>
 
@@ -46,5 +37,7 @@
     <fmt:message key="${errorLoginPassMessage}"/>
 </c:if>
 --%>
+<%@include file="/view/footer.jsp" %>
 
-</body></html>
+</body>
+</html>

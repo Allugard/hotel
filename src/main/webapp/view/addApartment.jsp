@@ -1,13 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 
 
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="login.page"/> </title>
+    <title><fmt:message key="login.page"/></title>
 </head>
 
 <body>
@@ -16,40 +15,44 @@
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<form name="addBookingForm" method="POST" action="/profile/addApartment/add" autocomplete="on">
-    <input type="hidden" name="command" value="addApartment"/>
+<form class="register" name="addBookingForm" method="POST" action="/profile/addApartment/add" autocomplete="on">
 
-    <div>
-        <span><fmt:message key="apartments.capacity"/><label>*</label></span>
-        <input type="number" value="${capacity}" name="capacity" required="required">
-    </div>
+    <table align="center">
+        <tr>
+            <td><fmt:message key="apartments.capacity"/>*</td>
+            <td><input type="number" value="${capacity}" name="capacity" required="required"></td>
+        </tr>
 
-    <div>
-        <span><fmt:message key="apartments.price"/><label>*</label></span>
-        <input type="number" value="${price}" name="price" required="required">
-    </div>
+        <tr>
+            <td><fmt:message key="apartments.price"/>*</td>
+            <td><input type="number" value="${price}" name="price" required="required"></td>
+        </tr>
 
-    <div>
-        <span><fmt:message key="apartments.number"/><label>*</label></span>
-        <input type="text" value="${number}" name="number" required="required">
-    </div>
+        <tr>
+            <td><fmt:message key="apartments.number"/>*</td>
+            <td><input type="text" value="${number}" name="number" required="required"></td>
+        </tr>
 
-    <div>
-    <span><fmt:message key="apartments.apartments.type"/><label>*</label></span>
+        <tr>
+            <td><fmt:message key="bookings.apartments.type"/>*</td>
+            <td>
+                <select name="apartmentsType" required=required>
+                    <option value="Standart" ${apartmentsType == 'standart' ? 'selected' : ''}>Standart</option>
+                    <option value="Suite" ${apartmentsType == 'suite' ? 'selected' : ''}>Suite</option>
+                </select>
+            </td>
+        </tr>
 
-        <select name="apartmentsType" required=required>
-            <option value="Standart" ${apartmentsType == 'standart' ? 'selected' : ''}>Standart</option>
-            <option value="Suite" ${apartmentsType == 'suite' ? 'selected' : ''}>Suite</option>
-        </select>
-    </div>
+    </table>
 
     <input type="submit" value=<fmt:message key="bookings.create"/>>
 </form>
 <c:forEach items="${errors}" var="item">
-    <fmt:message key="${item}"/>
+    <p class="text-danger"><fmt:message key="${item}"/></p>
     <br>
 </c:forEach>
 
 
+<%@include file="/view/footer.jsp" %>
 </body>
 </html>

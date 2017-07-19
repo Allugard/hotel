@@ -35,7 +35,7 @@ public class ApartmentServiceTest {
         return new Apartment.Builder()
                 .setId(1)
                 .setCapacity(4)
-                .setNumber("3-15")
+                .setNumber(315)
                 .setApartmentsType(Apartment.ApartmentsType.STANDART)
                 .setPrice(350)
                 .build();
@@ -49,7 +49,7 @@ public class ApartmentServiceTest {
         when(daoFactory.getApartmentDao()).thenReturn(apartmentDao);
     }
 
-    private void stubForFindAll(List<Apartment> apartments){
+    private void stubForFindAll(List<Apartment> apartments) throws DaoException {
         stubDaoFactory();
         when(apartmentDao.findAll()).thenReturn(apartments);
     }
@@ -70,7 +70,7 @@ public class ApartmentServiceTest {
     }
 
     @Test
-    public void testFindAll(){
+    public void testFindAll() throws DaoException {
         List<Apartment> apartments = buildApartments();
         init();
         stubForFindAll(apartments);

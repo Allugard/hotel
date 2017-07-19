@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ taglib prefix="custom" uri="http://allugard.ua" %>
@@ -8,7 +8,7 @@
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="login.page"/> </title>
+    <title><fmt:message key="login.page"/></title>
 </head>
 
 <body>
@@ -19,12 +19,29 @@
 --%>
 <form action="/profile/processedBookings/update" method="post">
 
-    <table border="1">
+    <table class="register mytable">
         <tr>
-            <th><fmt:message key="bookings.dateFrom"/></th>
-            <th><fmt:message key="bookings.dateTo"/></th>
-            <th><fmt:message key="bookings.persons"/></th>
-            <th><fmt:message key="bookings.apartments.type"/></th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="bookings.dateFrom"/>
+                </div>
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="bookings.dateTo"/>
+                </div>
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="bookings.persons"/>
+                </div>
+
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="bookings.apartments.type"/>
+                </div>
+            </th>
         </tr>
 
         <c:forEach items="${bookings}" var="item" varStatus="status">
@@ -36,73 +53,71 @@
 
 
             <tr>
-            <td><custom:formatDate value="${item.dateFrom}" pattern="dd/MM/yyyy" /></td>
-            <td><custom:formatDate value="${item.dateTo}" pattern="dd/MM/yyyy" /></td>
-            <td><c:out value="${item.persons}"/></td>
-            <td><c:out value="${item.apartmentsType}"/></td>
-            <td>
-                    <select name="status">
-                        <option value="rejected">reject</option>
-                        <c:forEach items="${freeNumbersForBooking[status.index]}" var="apartmentItem">
-                            <option value="${apartmentItem.id}"><c:out value="${apartmentItem.number}"/></option>
-                        </c:forEach>
-
-                    </select>
-                   <%-- <c:if test="${item.id != null}">
-                        <input type="hidden" name="update" value="ab1" />
-                    </c:if>
-                    <c:if test="${item.id == null}">
-                        <input type="hidden" name="update" value="Rejected" />
-                    </c:if>
-                    <c:out value="${item.id}"/>--%>
-<%--
-                <form action="/profile/processedBookings/update" method="post">
-                    <input type="hidden" name="command" value="updateBooking"/>
-                    <input type="hidden" name="update" value="${item.id}" />
-                    <button type="submit"><fmt:message key="booking.update"/></button>
-                </form>
---%>
-            </td>
-        </tr>
-
+                <td>
+                    <div class="col-md-2">
+                        <custom:formatDate value="${item.dateFrom}" pattern="dd/MM/yyyy"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <custom:formatDate value="${item.dateTo}" pattern="dd/MM/yyyy"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.persons}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.apartmentsType}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <select name="status">
+                            <option value="rejected">reject</option>
+                            <c:forEach items="${freeNumbersForBooking[status.index]}" var="apartmentItem">
+                                <option value="${apartmentItem.id} ${apartmentItem.price}"><c:out
+                                        value="${apartmentItem.number}"/></option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </td>
+            </tr>
         </c:forEach>
     </table>
-
-
-
-    <%--
-             <input type="hidden" name="update" value="${item.id}" />
-    --%>
-    <button type="submit"><fmt:message key="booking.update"/></button>
+    <button class="submit-button" type="submit"><fmt:message key="booking.update"/></button>
 </form>
 
-<%--For displaying Previous link except for the 1st page --%>
+
+<%--
+         <input type="hidden" name="update" value="${item.id}" />
+--%>
+
 <c:if test="${currentPage != 1}">
     <td><a href="/profile/processedBookings?page=${currentPage - 1}">Previous</a></td>
 </c:if>
 
-<%--For displaying Page numbers.
-The when condition does not display a link for the current page--%>
-<table border="1" cellpadding="5" cellspacing="5">
+<table>
     <tr>
         <c:forEach begin="1" end="${noOfPages}" var="i">
             <c:choose>
                 <c:when test="${currentPage eq i}">
-                    <td>${i}</td>
+                    <td class="my-pagination">${i}</td>
                 </c:when>
                 <c:otherwise>
-                    <td><a href="/profile/processedBookings?page=${i}">${i}</a></td>
+                    <td class="my-pagination"><a href="/profile/processedBookings?page=${i}">${i}</a></td>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
     </tr>
 </table>
 
-<%--For displaying Next link --%>
 <c:if test="${currentPage lt noOfPages}">
     <td><a href="/profile/processedBookings?page=${currentPage + 1}">Next</a></td>
 </c:if>
 
 
-
-</body></html>
+</body>
+</html>

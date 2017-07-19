@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ taglib prefix="custom" uri="http://allugard.ua" %>
@@ -8,7 +8,7 @@
 <html>
 <head>
     <%@include file="/view/head.jsp" %>
-    <title><fmt:message key="login.page"/> </title>
+    <title><fmt:message key="login.page"/></title>
 </head>
 
 <body>
@@ -17,35 +17,66 @@
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
-<c:forEach items="${apartments}" var="item">
 
+<div class="register">
+    <table align="center">
+        <tr>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="apartments.capacity"/>
+                </div>
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="apartments.price"/>
+                </div>
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="apartments.number"></fmt:message>
+                </div>
+            </th>
+            <th>>
+                <div class="col-md-2">
+                    <fmt:message key="apartments.apartments.type"/>
+                </div>
+            </th>
+        </tr>
+        <c:forEach items="${apartments}" var="item">
 
-    <table border="1">
-        <tr>
-            <th><fmt:message key="apartments.capacity"/></th>
-            <th><fmt:message key="apartments.price"/></th>
-            <th><fmt:message key="apartments.number"/></th>
-            <th><fmt:message key="apartments.apartments.type"/></th>
-        </tr>
-        <tr>
-            <td><c:out value="${item.capacity}"/></td>
-            <td><c:out value="${item.price}"/></td>
-            <td><c:out value="${item.number}"/></td>
-            <td><c:out value="${item.apartmentsType}"/></td>
-            <td>
-                <form action="/profile/apartments/delete" method="post">
-                    <input type="hidden" name="command" value="deleteApartment"/>
-                    <input type="hidden" name="delete" value=${item.id} />
-                    <button type="submit"><fmt:message key="apartments.delete"/></button>
-                </form>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.capacity}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.price}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.number}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.apartmentsType}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <form action="/profile/apartments/delete" method="post">
+                            <button class="submit-button" type="submit"><fmt:message key="apartments.delete"/></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </c:forEach>
     </table>
+</div>
 
 
-
-
-</c:forEach>
-
-
-</body></html>
+</body>
+</html>
