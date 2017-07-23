@@ -86,7 +86,7 @@
 </c:if>
 
 
-<%@include file="/view/footer.jsp" %>
+<%@include file="footer.jsp" %>
 
 </body>
 </html>

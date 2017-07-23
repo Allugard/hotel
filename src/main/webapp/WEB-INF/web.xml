@@ -79,17 +79,17 @@
 
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/view/error.jsp</location>
+        <location>/WEB-INF/view/error.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>404</error-code>
-        <location>/view/error.jsp</location>
+        <location>/WEB-INF/view/error.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>500</error-code>
-        <location>/view/error.jsp</location>
+        <location>/WEB-INF/view/error.jsp</location>
     </error-page>
 
     <!--    <error-page>

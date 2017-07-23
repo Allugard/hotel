@@ -7,11 +7,11 @@
 
 <html>
 <head>
-    <%@include file="/view/head.jsp" %>
+    <%@include file="head.jsp" %>
 </head>
 
 <body>
-<%@include file="/view/header.jsp" %>
+<%@include file="header.jsp" %>
 
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
@@ -147,6 +147,8 @@
     <p class="text-danger"><fmt:message key="${item}"/></p>
     <br>
 </c:forEach>
+
+
 <%--
          <input type="hidden" name="update" value="${item.id}" />
 --%>
@@ -174,6 +176,7 @@
     <td><a href="/profile/processedBookings?page=${currentPage + 1}">Next</a></td>
 </c:if>
 
+<%@include file="footer.jsp" %>
 
 </body>
 </html>

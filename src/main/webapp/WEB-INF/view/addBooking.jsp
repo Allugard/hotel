@@ -6,11 +6,11 @@
 
 <html>
 <head>
-    <%@include file="/view/head.jsp" %>
+    <%@include file="head.jsp" %>
 </head>
 
 <body>
-<%@include file="/view/header.jsp" %>
+<%@include file="header.jsp" %>
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
@@ -118,7 +118,7 @@
 </c:forEach>
 
 
-<%@include file="/view/footer.jsp" %>
+<%@include file="footer.jsp" %>
 
 </body>
 </html>

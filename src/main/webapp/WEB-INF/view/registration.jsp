@@ -5,11 +5,11 @@
 
 <html>
 <head>
-    <%@include file="/view/head.jsp" %>
+    <%@include file="head.jsp" %>
 </head>
 
 <body>
-<%@include file="/view/header.jsp" %>
+<%@include file="header.jsp" %>
 
 <form class="register" method="POST" action="/registration/signup" autocomplete="on">
     <div>
@@ -47,6 +47,7 @@
     <br>
 </c:forEach>
 
+<%@include file="footer.jsp" %>
 
 </body>
 </html>
