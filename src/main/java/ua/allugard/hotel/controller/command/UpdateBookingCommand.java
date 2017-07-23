@@ -45,6 +45,7 @@ public class UpdateBookingCommand implements Command {
             return ProcessedBookingsCommand.getInstance().execute(request, response);
         }
 
+        System.out.println(bookings);
         bookingService.update(bookings);
 
         return ProcessedBookingsCommand.getInstance().execute(request, response);
@@ -77,21 +78,22 @@ public class UpdateBookingCommand implements Command {
                     .setApartmentsType(Apartment.ApartmentsType.valueOf(request.getParameterValues(Parameters.APARTMENTS_TYPE)[i].toUpperCase()))
                     .build();
 
-            if(request.getParameterValues(Parameters.STATUS)[i].equals(Booking.Status.REJECTED.toString())){
+            if (request.getParameterValues(Parameters.STATUS)[i].equals(Booking.Status.REJECTED.toString())) {
                 booking.setStatus(Booking.Status.REJECTED);
-            } else {
-                String [] apartmentParameters = request.getParameterValues(Parameters.STATUS)[i].split(SPACE);
+                bookings.add(booking);
+            }
+
+            if (request.getParameterValues(Parameters.STATUS)[i].equals(Booking.Status.CONFIRMED.toString())) {
+                String[] apartmentParameters = request.getParameterValues(Parameters.STATUS)[i].split(SPACE);
                 booking.setStatus(Booking.Status.CONFIRMED);
                 booking.setApartment(new Apartment.Builder()
-                        .setId(Integer.parseInt(apartmentParameters[0]))
-                        .setPrice(Integer.parseInt(apartmentParameters[1]))
+                        .setId(Integer.parseInt(request.getParameter("apartmentsId")))
+                        .setPrice(Integer.parseInt(request.getParameter("apartmentsPrice")))
                         .build());
-            }
-            bookings.add(booking);
-//            System.out.println(booking);
-        }
 
+                bookings.add(booking);
+            }
+        }
         return bookings;
     }
-
 }

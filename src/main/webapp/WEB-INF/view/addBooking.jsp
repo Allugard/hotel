@@ -11,7 +11,6 @@
 
 <body>
 <%@include file="/view/header.jsp" %>
-ФЫВЛДФВЫДЖФЫДФЫЭВДЖЫФДВЖФЫЭВД
 <%--
 <form name="loginForm" method="POST" action="login/authorization" autocomplete="on">
 --%>
@@ -47,7 +46,6 @@
 
     <input type="submit" class="submit-button" value=<fmt:message key="bookings.find"/>>
 </form>
-ХОТЬ ШОТА
     <div class="register">
         <table align="center">
             <tr>

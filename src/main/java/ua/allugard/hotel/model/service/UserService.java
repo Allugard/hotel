@@ -47,6 +47,9 @@ public class UserService {
             connectionManager.startTransaction();
             daoFactory.getUserAuthenticationDao().create(user.getUserAuthentication());
             created = daoFactory.getUserDao().create(user);
+            if(1 == 1){
+                throw new RuntimeException();
+            }
             connectionManager.commit();
         } catch (DaoException e){
             connectionManager.rollback();

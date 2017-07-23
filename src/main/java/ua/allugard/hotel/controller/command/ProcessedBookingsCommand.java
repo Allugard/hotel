@@ -44,16 +44,17 @@ public class ProcessedBookingsCommand implements Command {
         List<Booking> bookings = bookingService.findProcessedBookings((page - 1) * RECORDS_PER_PAGE, RECORDS_PER_PAGE);
 
         int numberOfPages = getNumberOfPages();
-        List<List<Apartment>> freeNumbersForBooking = getFreeNumbers(bookings);
+//        List<List<Apartment>> freeNumbersForBooking = getFreeNumbers(bookings);
 
-        setAttributesToRequest(request, bookings, freeNumbersForBooking, numberOfPages, page);
+//        System.out.println(bookings);
+        setAttributesToRequest(request, bookings, numberOfPages, page);
 
         return Page.PROCESSED_BOOKINGS;
     }
 
-    private void setAttributesToRequest(HttpServletRequest request, List<Booking> bookings, List<List<Apartment>> freeNumbersForBooking, int numberOfPages, int page) {
+    private void setAttributesToRequest(HttpServletRequest request, List<Booking> bookings, int numberOfPages, int page) {
         request.setAttribute(Parameters.BOOKINGS, bookings);
-        request.setAttribute(Parameters.FREE_NUMBERS, freeNumbersForBooking);
+//        request.setAttribute(Parameters.FREE_NUMBERS, freeNumbersForBooking);
         request.setAttribute(Parameters.NUMBER_OF_PAGES, numberOfPages);
         request.setAttribute(Parameters.CURRENT_PAGE, page);
     }
@@ -85,7 +86,7 @@ public class ProcessedBookingsCommand implements Command {
     private int getPage(HttpServletRequest request) {
         int page;
         if(request.getParameter(Parameters.PAGE) != null) {
-            page = Integer.parseInt(request.getParameter("page"));
+            page = Integer.parseInt(request.getParameter(Parameters.PAGE));
         }else {
             page = 1;
         }

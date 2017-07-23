@@ -128,7 +128,11 @@ public class JdbcBookingDao implements BookingDao {
             statement.setString(COLUMN_STATUS_INDEX, booking.getStatus().toString());
             statement.setInt(COLUMN_PERSONS_INDEX, booking.getPersons());
             statement.setString(COLUMN_APARTMENTS_TYPE_INDEX, booking.getApartmentsType().toString());
-            statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
+            if(booking.getApartment() != null){
+                statement.setInt(COLUMN_APARTMENTS_ID_INDEX, booking.getApartment().getId());
+            }else {
+                statement.setNull(COLUMN_APARTMENTS_ID_INDEX, Types.INTEGER);
+            }
             if(booking.getUser() != null) {
                 statement.setInt(COLUMN_USERS_ID_INDEX, booking.getUser().getUserAuthentication().getId());
             } else {

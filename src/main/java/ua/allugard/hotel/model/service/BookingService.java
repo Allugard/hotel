@@ -2,8 +2,10 @@ package ua.allugard.hotel.model.service;
 
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.DaoFactory;
+import ua.allugard.hotel.model.entity.Apartment;
 import ua.allugard.hotel.model.entity.Bill;
 import ua.allugard.hotel.model.entity.Booking;
+import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
 import java.time.temporal.ChronoUnit;
@@ -95,6 +97,17 @@ public class BookingService {
     public List<Booking> findProcessedBookings(int firstRecord, int recordsPerPage) throws DaoException {
         List<Booking> bookings;
         bookings = daoFactory.getBookingDao().findProcessedBooking(firstRecord, recordsPerPage);
+        for (Booking booking : bookings) {
+            daoFactory.getBillDao().findByBooking(booking);
+            Optional<Apartment> apartmentOptional = daoFactory.getApartmentDao().findByBooking(booking);
+            if(apartmentOptional.isPresent()){
+                booking.setApartment(apartmentOptional.get());
+            }
+            Optional<User> userOptional = daoFactory.getUserDao().findByBooking(booking);
+            if(userOptional.isPresent()){
+                booking.setUser(userOptional.get());
+            }
+        }
         return bookings;
     }
 

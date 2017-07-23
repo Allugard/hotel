@@ -30,6 +30,7 @@ public class PostRequestFilter implements Filter {
         postRequests.add(Path.DELETE_APARTMENT);
         postRequests.add(Path.DELETE_BOOKING);
         postRequests.add(Path.UPDATE_BOOKING);
+        postRequests.add(Path.FIND);
     }
 
     @Override

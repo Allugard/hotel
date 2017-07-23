@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import ua.allugard.hotel.model.dao.UserDao;
 import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
+import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.util.constants.LogMessage;
 import ua.allugard.hotel.util.exceptions.DaoException;
@@ -38,6 +39,9 @@ public class JdbcUserDao implements UserDao {
     private static final String FIND_ALL = "SELECT * FROM users";
     private static final String FIND_BY_ID = FIND_ALL + " WHERE id = ?";
     private static final String FIND_BY_FULL_NAME = FIND_ALL + " WHERE last_name = ? AND first_name = ?";
+    private static final String FIND_BY_BOOKING = FIND_ALL + " INNER JOIN bookings ON users.id = bookings.users_id " +
+            " WHERE bookings.id = ?";
+
 
     JdbcUserDao(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -148,6 +152,24 @@ public class JdbcUserDao implements UserDao {
         } catch (SQLException e) {
             LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND_BY_FULL_NAME + e.getMessage());
             throw new DaoException();
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<User> findByBooking(Booking booking) throws DaoException {
+        Optional<User> result = null;
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BY_BOOKING)){
+            statement.setInt(1, booking.getId());
+            ResultSet resultSet = statement.executeQuery();
+            result = getUserFromResultSet(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOGGER.info(JdbcUserDao.class.toString() + LogMessage.FIND + e.getMessage());
+            throw new DaoException();
+
         }
         return result;
     }

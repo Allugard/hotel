@@ -6,6 +6,7 @@ import ua.allugard.hotel.model.dao.util.ConnectionManager;
 import ua.allugard.hotel.model.dao.util.JdbcConnection;
 import ua.allugard.hotel.model.dto.BookingDto;
 import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.util.constants.LogMessage;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
@@ -47,7 +48,15 @@ public class JdbcApartmentDao implements ApartmentDao {
                                                                             "FROM apartments " +
                                                                             "INNER JOIN bookings ON bookings.apartments_id = apartments.id " +
                                                                             "WHERE status = 'confirmed' and (? < bookings.date_to AND  ? > bookings.date_from)) " +
-                                                          "AND apartments.apartments_type = ? and apartments.capacity > ?";
+                                                          "AND apartments.apartments_type = ? and apartments.capacity >= ?";
+    private static final String FIND_BY_BOOKING = FIND_ALL + " INNER JOIN bookings ON apartments.id = bookings.apartments_id " +
+            " WHERE bookings.id = ? AND apartments.id NOT IN (" +
+            "SELECT bookings.apartments_id " +
+            "FROM apartments " +
+            "INNER JOIN bookings ON bookings.apartments_id = apartments.id " +
+            "WHERE status = 'confirmed' and (? < bookings.date_to AND  ? > bookings.date_from)) " +
+            "AND apartments.apartments_type = ? and apartments.capacity > ?";
+
 
 
     JdbcApartmentDao(ConnectionManager connectionManager) {
@@ -176,6 +185,26 @@ public class JdbcApartmentDao implements ApartmentDao {
             result = getApartmentsFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND_FREE_NUMBER + e.getMessage());
+            throw new DaoException();
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<Apartment> findByBooking(Booking booking) throws DaoException {
+        Optional<Apartment> result = null;
+        try (JdbcConnection connection = connectionManager.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(FIND_BY_BOOKING)){
+            statement.setInt(1, booking.getId());
+            statement.setDate(2, Date.valueOf(booking.getDateFrom()));
+            statement.setDate(3, Date.valueOf(booking.getDateTo()));
+            statement.setInt(5, booking.getPersons());
+            statement.setString(4, booking.getApartmentsType().toString());
+            ResultSet resultSet = statement.executeQuery();
+            result = getApartmentFromResultSet(resultSet);
+        } catch (SQLException e) {
+            LOGGER.info(JdbcApartmentDao.class.toString() + LogMessage.FIND + e.getMessage());
             throw new DaoException();
         }
         return result;

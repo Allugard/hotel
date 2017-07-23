@@ -1,5 +1,7 @@
 package ua.allugard.hotel.model.dao;
 
+import ua.allugard.hotel.model.entity.Apartment;
+import ua.allugard.hotel.model.entity.Booking;
 import ua.allugard.hotel.model.entity.User;
 import ua.allugard.hotel.util.exceptions.DaoException;
 
@@ -11,4 +13,6 @@ import java.util.Optional;
  */
 public interface UserDao extends GenericDao<User> {
     List<User> findUserByFullName(String firstName, String lastName) throws DaoException;
+    Optional<User> findByBooking(Booking booking) throws DaoException;
+
 }

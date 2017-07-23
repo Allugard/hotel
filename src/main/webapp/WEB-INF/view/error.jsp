@@ -9,11 +9,9 @@
 </head>
 <body>
 <%@include file="header.jsp" %>
-ERROR PAGE
-<c:forEach items="${errors}" var="item">
+
     <p class="text-danger"><fmt:message key="error.in.server"/></p>
-    <br>
-</c:forEach>
+
 
 <%@include file="footer.jsp" %>
 </body>

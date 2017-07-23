@@ -20,6 +20,23 @@
 
     <table class="register mytable">
         <tr>
+
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="registration.frist.name"/>
+                </div>
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="registration.last.name"/>
+                </div>
+            </th>
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="registration.phone"/>
+                </div>
+
+            </th>
             <th>
                 <div class="col-md-2">
                     <fmt:message key="bookings.dateFrom"/>
@@ -41,6 +58,12 @@
                     <fmt:message key="bookings.apartments.type"/>
                 </div>
             </th>
+
+            <th>
+                <div class="col-md-2">
+                    <fmt:message key="apartments.number"/>
+                </div>
+            </th>
         </tr>
 
         <c:forEach items="${bookings}" var="item" varStatus="status">
@@ -49,9 +72,29 @@
             <input type="hidden" name="id" value="${item.id}"/>
             <input type="hidden" name="persons" value="${item.persons}"/>
             <input type="hidden" name="apartmentsType" value="${item.apartmentsType}"/>
+           <c:if test="${item.apartment!=null}">
+               <input type="hidden" name="apartmentsId" value="${item.apartment.id}"/>
+               <input type="hidden" name="apartmentsPrice" value="${item.apartment.price}"/>
+           </c:if>
+
 
 
             <tr>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.user.firstName}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.user.lastName}"/>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
+                        <c:out value="${item.user.phone}"/>
+                    </div>
+                </td>
                 <td>
                     <div class="col-md-2">
                         <custom:formatDate value="${item.dateFrom}" pattern="dd/MM/yyyy"/>
@@ -74,12 +117,23 @@
                 </td>
                 <td>
                     <div class="col-md-2">
+                        <c:if test="${item.apartment != null}">
+                            <c:out value="${item.apartment.number}"/>
+                        </c:if>
+                        <c:if test="${item.apartment == null}">
+                            <fmt:message key="apartments.occupied"/>
+                        </c:if>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-2">
                         <select name="status">
+                            <option value=" " selected></option>
                             <option value="rejected"><fmt:message key="reject"/></option>
-                            <c:forEach items="${freeNumbersForBooking[status.index]}" var="apartmentItem">
-                                <option value="${apartmentItem.id} ${apartmentItem.price}"><c:out
-                                        value="${apartmentItem.number}"/></option>
-                            </c:forEach>
+                            <c:if test="${item.apartment != null}">
+                                <option value="confirmed"><fmt:message key="confirm"/></option>
+                            </c:if>
+
                         </select>
                     </div>
                 </td>
